@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "792206208168",
+    "project_id": "big9team3movieapp",
+    "storage_bucket": "big9team3movieapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:792206208168:android:12f3472b5af70e6b79669d",
+        "android_client_info": {
+          "package_name": "com.cookandroid.big9team3movieapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "792206208168-thdbret0ie2cq47363unh54q7hbvq1jp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ7UnLlconNHNfcjg7ua25Z1EM0cDPHlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "792206208168-thdbret0ie2cq47363unh54q7hbvq1jp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
