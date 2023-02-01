@@ -1,96 +1,85 @@
 package com.cookandroid.big9team3movieapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ListView;
+import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.BufferedReader;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-    private String key = "65f7606d63ef23b56c0e34f0eb4d1270";
-    private String url = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json";
-    private ListView listViewMain;
-    ArrayAdapter adapter;
-    ArrayList<String> title = new ArrayList<String>();
+
+    private RecyclerView recyclerView;
+    private ArrayList<Movie> mList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView listViewMain = findViewById(R.id.listViewMain);
-        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, title);
-        listViewMain.setAdapter(adapter);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewMain);
 
-        new Thread() {
-            @Override
-            public void run() {
-                title.clear();
-                Date date = new Date();
-                date.setTime(date.getTime() - (1000 * 60 * 60 * 24));
+        new Description().execute();
+    }
 
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-                String dateStr = sdf.format(date);
-                String urlAddr = url + "?key=" + key + "&targetDt=" + dateStr;
+    private class Description extends AsyncTask<Void, Void, Void> {
 
-                try {
-                    URL url = new URL(urlAddr);
+        private ProgressDialog progressDialog;
 
-                    InputStream is = url.openStream();
-                    InputStreamReader isr = new InputStreamReader(is);
-                    BufferedReader reader = new BufferedReader(isr);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-                    StringBuffer buffer = new StringBuffer();
-                    String line = reader.readLine();
-                    while (line != null) {
-                        buffer.append(line + "\n");
-                        line = reader.readLine();
-                    }
-                    String jsonData = buffer.toString();
-                    JSONObject obj = new JSONObject(jsonData);
-                    JSONObject boxOfficeResult = (JSONObject) obj.get("boxOfficeResult");
-                    JSONArray dailyBoxOfficeList = (JSONArray) boxOfficeResult.get("dailyBoxOfficeList");
-                    for (int i = 0; i < dailyBoxOfficeList.length(); i++) {
-                        JSONObject temp = dailyBoxOfficeList.getJSONObject(i);
-                        String movieNm = temp.getString("movieNm");
-                        title.add(movieNm);
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-                } catch (
-                        MalformedURLException ex) {
-                    ex.printStackTrace();
-                } catch (
-                        IOException ex) {
-                    ex.printStackTrace();
-                } catch (
-                        JSONException ex) {
-                    ex.printStackTrace();
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("잠시 기다려 주세요.");
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                Document doc = Jsoup.connect("https://movie.naver.com/movie/running/current.naver").get();
+                Elements mElementDataSize = doc.select("ul[class=lst_detail_t1]").select("li");
+                int mElementSize = mElementDataSize.size();
+
+                for(Element elem : mElementDataSize) {
+                    String myTitle = elem.select("li dt[class=tit] a").text();
+                    String myLink = elem.select("li div[class=thumb] a").attr("href");
+                    String myImgUrl = elem.select("li div[class=thumb] a img").attr("src");
+                    Element rElem = elem.select("dl[class=info_txt1] dt").next().first();
+                    String myRelease = rElem.select("dd").text();
+                    Element dElem = elem.select("dt[class=tit_t2]").next().first();
+                    String myDirector = "감독: " + dElem.select("a").text();
+
+                    mList.add(new Movie(myTitle, myImgUrl, myLink, myRelease, myDirector));
                 }
+                Log.d("debug: ", "mList " + mElementDataSize);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }.start();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            MovieAdapter movieAdapter = new MovieAdapter(mList);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(movieAdapter);
+
+            progressDialog.dismiss();
+
+        }
     }
 }
