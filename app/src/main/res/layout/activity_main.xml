@@ -10,23 +10,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:text="현재 상영작"
-        android:textSize="30dp" />
+        android:textSize="40dp" />
 
-    <ImageButton
-        android:id="@+id/imgBtnUser"
+    <Button
+        android:id="@+id/btnLoginPage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/icon_user"
-        tools:ignore="SpeakableTextPresentCheck" />
+        android:layout_margin="5dp"
+        android:text="로그인"/>
+
+<!--    <Button-->
+<!--        android:id="@+id/btnLogout"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="로그아웃"-->
+<!--        android:layout_toLeftOf="@+id/btnMyPage"-->
+<!--        android:layout_margin="20dp"/>-->
+
+    <Button
+        android:id="@+id/btnMyPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5dp"
+        android:text="마이페이지"
+        android:visibility="invisible"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/imgBtnUser"/>
+        android:layout_below="@+id/btnLoginPage"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp" />
 
 </RelativeLayout>

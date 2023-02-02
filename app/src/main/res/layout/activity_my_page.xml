@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MyPageActivity">
+
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/Info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#f00000"
+                    android:orientation="horizontal"></LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/review"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#f00000"
+                    android:orientation="horizontal"></LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/booking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#f00000"
+                    android:orientation="horizontal"></LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="돌아가기" />
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="로그아웃" />
+
+        <Button
+            android:id="@+id/btn_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="탈퇴" />
+
+    </TabHost>
+
+</LinearLayout>
