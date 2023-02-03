@@ -113,7 +113,8 @@ public class MainActivity extends AppCompatActivity {
                     Element dElem = elem.select("dt[class=tit_t2]").next().first();
                     String myDirector = "감독: " + dElem.select("a").text();
 
-                    mList.add(new Movie(myTitle, myImgUrl, myLink, myRelease, myDirector));
+                    mList.add(new Movie(myTitle, myImgUrl, myLink, myRelease, myDirector,
+                            null, null, null, null, null, null));
                 }
                 Log.d("debug: ", "mList " + mElementDataSize);
             } catch (IOException e) {
@@ -131,68 +132,70 @@ public class MainActivity extends AppCompatActivity {
 
             progressDialog.dismiss();
 
-            // 아이템을 클릭하면 상세보기 대화상자가 뜸
+            // 상세보기 액티비티 띄우기
             movieAdapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int pos) {
                     Movie movie = movieAdapter.getItem(pos);
-                    View dialogview = View.inflate(MainActivity.this, R.layout.dialog_detail, null);
+                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                    intent.putExtra("movie", movie);
+                    startActivity(intent);
+                    // 아이템을 클릭하면 상세보기 대화상자가 뜸
+//                    View dialogview = View.inflate(MainActivity.this, R.layout.dialog_detail, null);
+//                    ImageView ivBigPoster = dialogview.findViewById(R.id.ivBigPoster);
+//                    GlideApp.with(dialogview).load(mList.get(pos).getImg_url())
+//                            .override(500, 800)
+//                            .into(ivBigPoster);
 
-                    ImageView ivBigPoster = dialogview.findViewById(R.id.ivBigPoster);
-
-                    Button btnOverview = dialogview.findViewById(R.id.btnOverview);
-                    Button btnReservation = dialogview.findViewById(R.id.btnReservation);
-                    Button btnVoting = dialogview.findViewById(R.id.btnVoting);
-                    Button btnReviewing = dialogview.findViewById(R.id.btnReviewing);
-
-                    GlideApp.with(dialogview).load(mList.get(pos).getImg_url())
-                            .override(500, 800)
-                            .into(ivBigPoster);
-
-                    // 줄거리 보기 버튼 이벤트 처리
-                    btnOverview.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Movie movie = movieAdapter.getItem(pos);
-                            Log.d("link:", mList.get(pos).getDetail_link() + "");
-                            Uri uri = Uri.parse("https://movie.naver.com/" + mList.get(pos).getDetail_link());
-                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                            startActivity(intent);
-                        }
-                    });
-
-                    //예매하기 이벤트처리
-                    btnReservation.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getApplicationContext(),BookingActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-
-                    //별점리뷰 이벤트처리
-                    btnVoting.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getApplicationContext(), ReviewwithstarActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-
-                    //리뷰 페이지 이벤트 처리
-                    btnReviewing.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-
-                    AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
-                    dlg.setTitle(movie.getTitle());
-                    dlg.setView(dialogview);
-                    dlg.setNegativeButton("닫기", null);
-                    dlg.show();
+//                    Button btnOverview = dialogview.findViewById(R.id.btnOverview);
+//                    Button btnReservation = dialogview.findViewById(R.id.btnReservation);
+//                    Button btnVoting = dialogview.findViewById(R.id.btnVoting);
+//                    Button btnReviewing = dialogview.findViewById(R.id.btnReviewing);
+//
+//                    // 줄거리 보기 버튼 이벤트 처리
+//                    btnOverview.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Movie movie = movieAdapter.getItem(pos);
+//                            Log.d("link:", mList.get(pos).getDetail_link() + "");
+//                            Uri uri = Uri.parse("https://movie.naver.com/" + mList.get(pos).getDetail_link());
+//                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//                            startActivity(intent);
+//                        }
+//                    });
+//
+//                    //예매하기 이벤트처리
+//                    btnReservation.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent intent = new Intent(getApplicationContext(),BookingActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    });
+//
+//                    //별점리뷰 이벤트처리
+//                    btnVoting.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent intent = new Intent(getApplicationContext(), ReviewwithstarActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    });
+//
+//                    //리뷰 페이지 이벤트 처리
+//                    btnReviewing.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
+//                            startActivity(intent);
+//                        }
+//                    });
+//
+//                    AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
+//                    dlg.setTitle(movie.getTitle());
+//                    dlg.setView(dialogview);
+//                    dlg.setNegativeButton("닫기", null);
+//                    dlg.show();
                 }
             });
 
