@@ -39,6 +39,8 @@ public class LoginActivity<User> extends AppCompatActivity {
     private static int RC_SIGN_IN = 9001;           // 임의로 설정 가능
     private String email, pwd;
 
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +52,7 @@ public class LoginActivity<User> extends AppCompatActivity {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("loginApp");
         editEmail = findViewById(R.id.et_email);
         editPwd = findViewById(R.id.et_pwd);
-        btn_google = (SignInButton)findViewById(R.id.btn_google);
+        btn_google = (SignInButton) findViewById(R.id.btn_google);
 
         //1. 이메일과 비밀번호를 이용한 로그인 방법
         //로그인 버튼
@@ -64,12 +66,11 @@ public class LoginActivity<User> extends AppCompatActivity {
                 email = editEmail.getText().toString();
                 pwd = editPwd.getText().toString();
 
-                if(email.length()==0 || pwd.length()==0){
+                if (email.length() == 0 || pwd.length() == 0) {
                     Toast.makeText(LoginActivity.this, "로그인하세요", Toast.LENGTH_SHORT).show();
                     editEmail.requestFocus();
                     return;
                 }
-
 
                 //파이어베이스 객체에 signInWithEmailAndPassword method를 써서 입력한 이메일과 패스워드를 넣는다..?
                 mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -79,6 +80,8 @@ public class LoginActivity<User> extends AppCompatActivity {
                             //로그인 성공 시 메인 페이지로 이동
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
+                            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                            updateUI(user);
                             finish();//현재 액티비티 파괴
                         } else {
                             Toast.makeText(LoginActivity.this, "로그인 실패", Toast.LENGTH_SHORT).show();
@@ -87,7 +90,9 @@ public class LoginActivity<User> extends AppCompatActivity {
                 });
 
             }
+
         });
+
         Button btn_myPage = findViewById(R.id.btn_myPage);
         btn_myPage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,63 +131,63 @@ public class LoginActivity<User> extends AppCompatActivity {
                 //마지막에 로그인한 객체 저장
                 gsa = GoogleSignIn.getLastSignedInAccount(LoginActivity.this);
                 //이미 구글 계정으로 로그인이 되어있는 상태
-                if(gsa != null)
-                {   //바로 메인화면으로 이동
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                if (gsa != null) {   //바로 메인화면으로 이동
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
 
-                }
-                else {
+                } else {
                     //아니라면 signIn함수 호출
                     signIn();
-                };
+                }
+                ;
             }
         });
+
     }
 
     //SignIn 함수
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent,RC_SIGN_IN);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
     //Login 결과값 받기: 사용자가 액티비티에서 실행한 결과를 onActivityResult에서 data로 받을 수 있다.
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == RC_SIGN_IN){
+        if (requestCode == RC_SIGN_IN) {
             //로그인을 했을 때 구글에서 넘겨주는 결과값(실행한 결과)를 받아와서 저장한다.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try{
+            try {
                 //result가 성공했을 때, 이 값을 firebase에 넘겨주기 위해서 GoogleSignInAccount 객체를 생성한다.
                 //SignInAccount: 사용자 로그인 후 return 받은 구글 계정에 대한 정보가 담긴 객체
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.d("Tag","firebaseAuthWithGoogle:" +account.getId());
+                Log.d("Tag", "firebaseAuthWithGoogle:" + account.getId());
                 //firebaseAuthWithGoogle에 account값을 전달한다.
                 firebaseAuthWithGoogle(account.getIdToken());
-            }catch(ApiException e){
+            } catch (ApiException e) {
                 //로그인 실패시
-                Log.w("TAG","Google sign in failed",e);
+                Log.w("TAG", "Google sign in failed", e);
             }
         }
-
 
     }
 
     //사용자가 성공적으로 로그인하여 해당 메소드로 account(googleSignInAccount 객체)를 인자로 받게 될 때,
     //여기서 ID 토큰을 가져와서 firebase 사용자 인증정보로 교환한다.
-    private void firebaseAuthWithGoogle(String idToken){
+    private void firebaseAuthWithGoogle(String idToken) {
         //signInWithCredential 메소드를 통해서 firebase에 인증한다.
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken,null);
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mFirebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Log.d("TAG", "signInWithCredential:success");
                             FirebaseUser user = mFirebaseAuth.getCurrentUser(); //USER 사용자 받아오면
                             //파이어베이스에 넣기 위해 구글에서 가져온 정보를 담은 파이어베이스유저 객체 생성
-                            Toast.makeText(getApplicationContext(), "로그인" +user.getProviderData().get(1).getEmail(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "로그인" + user.getProviderData().get(1).getEmail(), Toast.LENGTH_SHORT).show();
                             UserAccount userAccount = new UserAccount();
                             userAccount.setIdToken(user.getUid());
                             userAccount.setName(user.getDisplayName());
@@ -194,19 +199,22 @@ public class LoginActivity<User> extends AppCompatActivity {
                             mDatabaseRef.child("UserAccount").child(user.getUid()).setValue(userAccount).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Log.d("FirebaseDatabase ::: ","회원가입성공 : " + user.getEmail());
+                                    Log.d("FirebaseDatabase ::: ", "회원가입성공 : " + user.getEmail());
                                 }
 
                             });
-                            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                             Toast.makeText(LoginActivity.this, "Google 로그인 성공!", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
+                        } else {
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
                         }
                     }
                 });
+    }
+
+    private void updateUI(FirebaseUser user) {
+
     }
 
     //로그아웃
@@ -218,8 +226,6 @@ public class LoginActivity<User> extends AppCompatActivity {
 //                });
 //        gsa = null;
 //    }
-
-
 
 
 }
