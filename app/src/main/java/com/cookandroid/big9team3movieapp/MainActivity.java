@@ -1,5 +1,6 @@
 package com.cookandroid.big9team3movieapp;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
+        // 로그인 유무 확인
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             btnLoginPage.setVisibility(View.INVISIBLE);
@@ -79,18 +81,22 @@ public class MainActivity extends AppCompatActivity {
             });
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewMain);
+
+        // AsyncTask 작동
         new Description().execute();
     }
 
-
+    @SuppressLint("StaticFieldLeak")
     private class Description extends AsyncTask<Void, Void, Void> {
 
+        // 진행바 표시
         private ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
+            // 진행바 시작
             progressDialog = new ProgressDialog(MainActivity.this);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setMessage("잠시 기다려 주세요.");
@@ -105,16 +111,15 @@ public class MainActivity extends AppCompatActivity {
                 int mElementSize = mElementDataSize.size();
 
                 for (Element elem : mElementDataSize) {
-                    String myTitle = elem.select("li dt[class=tit] a").text();
-                    String myLink = elem.select("li div[class=thumb] a").attr("href");
-                    String myImgUrl = elem.select("li div[class=thumb] a img").attr("src");
+                    String myTitle = elem.select("li dt[class=tit] a").text(); // 제목
+                    String myLink = elem.select("li div[class=thumb] a").attr("href"); // 상세 정보 링크
+                    String myImgUrl = elem.select("li div[class=thumb] a img").attr("src"); // 포스터
                     Element rElem = elem.select("dl[class=info_txt1] dt").next().first();
                     String myRelease = rElem.select("dd").text();
                     Element dElem = elem.select("dt[class=tit_t2]").next().first();
                     String myDirector = "감독: " + dElem.select("a").text();
 
-                    mList.add(new Movie(myTitle, myImgUrl, myLink, myRelease, myDirector,
-                            null, null, null, null, null, null));
+                    mList.add(new Movie(myTitle, myLink, myImgUrl, myRelease, myDirector));
                 }
                 Log.d("debug: ", "mList " + mElementDataSize);
             } catch (IOException e) {
@@ -125,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
+            // 어댑터와 연결
             MovieAdapter movieAdapter = new MovieAdapter(mList);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
@@ -136,9 +142,10 @@ public class MainActivity extends AppCompatActivity {
             movieAdapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int pos) {
-                    Movie movie = movieAdapter.getItem(pos);
+                    // 선택한 아이템의 detail_link를 넘긴다.
+                    String link = mList.get(pos).getDetail_link();
                     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                    intent.putExtra("movie", movie);
+                    intent.putExtra("dlink", link);
                     startActivity(intent);
                     // 아이템을 클릭하면 상세보기 대화상자가 뜸
 //                    View dialogview = View.inflate(MainActivity.this, R.layout.dialog_detail, null);

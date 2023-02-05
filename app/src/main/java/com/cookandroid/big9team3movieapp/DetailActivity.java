@@ -33,7 +33,9 @@ public class DetailActivity extends AppCompatActivity {
     Button btnlike, btnStarReview, btnReview, btnBooking;
     RatingBar rbRatingBar;
 
-    private ArrayList<Movie> mList = new ArrayList<>();
+    private ArrayList<MovieDetail> mdList = new ArrayList<>();
+
+    // 로그인 안 되어있으면 투표, 리뷰 버튼 안 보이도록.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,49 +61,23 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-
             Intent inIntent = getIntent();
-            final Movie movie = (Movie) inIntent.getSerializableExtra("movie");
+            String dlink = inIntent.getStringExtra("dlink");
 
-//            MovieAdapter movieAdapter = new MovieAdapter(mList);
-//
-//            movieAdapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
-//
-//                @Override
-//                public void onItemClick(int pos) {
-//                    Movie movie = movieAdapter.getItem(pos);
             try {
-                Document doc = Jsoup.connect("https://movie.naver.com/" + movie.getDetail_link()).get();
-                Log.d("detaillink:", "https://movie.naver.com/" + movie.getDetail_link() + "");
-                Elements mElementDataSize = doc.select("div[class=article]").select("div");
+                Document doc = Jsoup.connect("https://movie.naver.com/" + dlink).get();
+                Log.d("detaillink:", "https://movie.naver.com/" + dlink + "");
+                Elements mElementDataSize = doc.select("div[class=wide_info_area]").select("div");
                 int mElementSize = mElementDataSize.size();
 
                 for (Element elem : mElementDataSize) {
-                    String myTitle = elem.select("div h3[class=h_movie] a").text(); // 영화 제목
-                    Element lElem = elem.select("div h3[class=h_movie] a").first();
-                    String myLink = lElem.select("a").attr("href"); // 링크
-                    String myImgUrl = elem.select("div div[class=poster] a img").attr("src"); // 포스터 링크
-                    Elements rElem = elem.select("p[class=info_spec] span").next().next();
-                    String myRelease = rElem.select("a").text(); // 개봉일
-                    String myDirector = elem.select("dt[class=step2] a").text(); // 감독
-                    Element gElem = elem.select("dl[class=info_spec] span").next().first();
-                    String myGenre = gElem.select("a").text(); // 장르
-                    // 좋아요 수
-                    // 순위
-                    // 별점
-                    List myRate = elem.select("div[class=star_score ] a").eachAttr("span");
-                    // 누적관객수
-                    String myAudiencecnt = elem.select("span[class=count]").text();
-                    // 줄거리
-                    String mySynopsis = elem.select("div[class=story_area]").text();
-                    // 배우
-                    Element aElem = elem.select("div[class=people] li").next().first();
-                    String myActor = aElem.select("a").text();
-                    // 등급
-                    String myGrade = elem.select("dt[class=step4] a").text();
+                    String myTitle = elem.select("h3[class=h_movie] a").text(); // 영화 제목
+                    String myImgUrl = elem.select("div[class=poster] a img").attr("src"); // 포스터 링크
+                    String myStarrating = elem.select("div[class=star_score ] a em").text();
+                    String myRelease = elem.select("p[class=info_spec]").text(); // 개봉일
+                    String myDirector = elem.select("dl[class=step1] a").text();
 
-                    mList.add(new Movie(myTitle, myLink, myImgUrl, myRelease, myDirector, myGenre,
-                            myRate, myAudiencecnt, mySynopsis, myActor, myGrade));
+                    mdList.add(new MovieDetail(myTitle, myImgUrl, myStarrating, myRelease, myDirector));
                 }
                 Log.d("debug: ", "mList " + mElementDataSize);
             } catch (IOException e) {
@@ -131,11 +107,11 @@ public class DetailActivity extends AppCompatActivity {
             tvGrade = findViewById(R.id.tvGrade);
 
             ivBigPoster = findViewById(R.id.ivBigPoster);
-            GlideApp.with(ivBigPoster).load(mList.get(posValue).getImg_url())
+            GlideApp.with(ivBigPoster).load(mdList.get(1).getD_img_url())
                     .override(300,400)
                     .into(ivBigPoster);
 
-            tvMovieTitle.setText(String.valueOf(mList.get(posValue).getTitle()));
+            tvMovieTitle.setText(mdList.get(0).getD_title());
 
         }
 

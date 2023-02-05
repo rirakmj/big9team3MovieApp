@@ -49,17 +49,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         this.onItemClickListener = onItemClickListener;
     }
 
-    // 어댑터 내부에 인터페이스
-//    public interface OnButtonClickListener {
-//        void onButtonClick(int pos);
-//    }
-//
-//    private OnButtonClickListener onButtonClickListener;
-//
-//    public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
-//        this.onButtonClickListener = onButtonClickListener;
-//    }
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivPoster;
@@ -78,17 +67,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     onItemClickListener.onItemClick(pos);
-
                 }
             });
-
         }
     }
 
-    public Movie getItem(int position) {
-        Movie movie = mList.get(position);
-        return movie;
-    }
+//    public Movie getItem(int position) {
+//        Movie movie = mList.get(position);
+//        return movie;
+//    }
 
     @NonNull
     @Override
@@ -99,17 +86,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MovieAdapter.MyViewHolder holder, int position) {
-
-        holder.tvTitle.setText(String.valueOf(mList.get(position).getTitle()));
-        holder.tvRelease.setText(String.valueOf(mList.get(position).getRelease()));
-        holder.tvDirector.setText(String.valueOf(mList.get(position).getDirector()));
-
         GlideApp.with(holder.itemView).load(mList.get(position).getImg_url())
                 .override(300,400)
                 .into(holder.ivPoster);
 
-
-
+        holder.tvTitle.setText(String.valueOf(mList.get(position).getTitle()));
+        holder.tvRelease.setText(String.valueOf(mList.get(position).getRelease()));
+        holder.tvDirector.setText(String.valueOf(mList.get(position).getDirector()));
     }
 
     @Override
