@@ -1,18 +1,12 @@
 package com.cookandroid.big9team3movieapp;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.media.Rating;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -25,15 +19,16 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
-    TextView tvMovieTitle, tvMovieRelease, tvMovieGenre, tvLikeCount, tvRank, tvRate, tvAudience, tvSynopsis, tvDirector, tvActor, tvGrade;
-    ImageView ivBigPoster;
-    Button btnlike, btnStarReview, btnReview, btnBooking;
-    RatingBar rbRatingBar;
 
     private ArrayList<MovieDetail> mdList = new ArrayList<>();
+
+    TextView tvMTitle, tvMRelease, tvMGenre, tvMRuntime, tvLikeCount, tvSpcscore, tvStarscore, tvAudiencecnt, tvSynopsis, tvDirector, tvActor, tvGrade;
+    ImageView ivBigPoster;
+    RatingBar rbSpcscore, rbStarscore;
+
+    Button btnlike, btnStarReview, btnReview, btnBooking;
 
     // 로그인 안 되어있으면 투표, 리뷰 버튼 안 보이도록.
 
@@ -66,20 +61,36 @@ public class DetailActivity extends AppCompatActivity {
 
             try {
                 Document doc = Jsoup.connect("https://movie.naver.com/" + dlink).get();
-                Log.d("detaillink:", "https://movie.naver.com/" + dlink + "");
-                Elements mElementDataSize = doc.select("div[class=wide_info_area]").select("div");
-                int mElementSize = mElementDataSize.size();
+                // Log.d("detaillink:", "https://movie.naver.com/" + dlink + "");
+                Elements elem = doc.select("#content > div.article");
+//                int mElementSize = mElementDataSize.size();
 
-                for (Element elem : mElementDataSize) {
-                    String myTitle = elem.select("h3[class=h_movie] a").text(); // 영화 제목
-                    String myImgUrl = elem.select("div[class=poster] a img").attr("src"); // 포스터 링크
-                    String myStarrating = elem.select("div[class=star_score ] a em").text();
-                    String myRelease = elem.select("p[class=info_spec]").text(); // 개봉일
-                    String myDirector = elem.select("dl[class=step1] a").text();
+//                for (Element elem : mElementDataSize) {
+                    String myTitle = elem.select("div.mv_info_area > div.mv_info > h3 > a:nth-child(1)").text(); // 영화 제목
+                    String myImgUrl = elem.select("div.mv_info_area > div.poster > a > img").attr("src"); // 포스터 링크
+//                    String myStarrating = elem.select("div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(2) > div > a > em").text();
+//                    Log.d("likecnt", "like: " +myStarrating);
+                    String myRelease = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(4)").text(); // 개봉일
+                    String myGenre = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(1)").text().replace(" ", ""); // 영화 장르
+                    String myRuntime = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(3)").text();
+                    String myGrade = elem.select("div div dl dt[class=step4]").next().first().text().replace(" ", "");
+                    Log.d("grade", "grade: "+myGrade);
 
-                    mdList.add(new MovieDetail(myTitle, myImgUrl, myStarrating, myRelease, myDirector));
-                }
-                Log.d("debug: ", "mList " + mElementDataSize);
+                    // String myLikecnt
+                    Float mySpcscorerb = Float.parseFloat(elem.select("div.mv_info_area > div.mv_info > div.main_score > div:nth-child(2) > div > a > div > em").text().replace(" ", ""));
+                    if (mySpcscorerb.equals("")) {
+                        String src = "평점 없음";
+                    }
+                    String mySpcscore = elem.select("div.mv_info_area > div.mv_info > div.main_score > div:nth-child(2) > div > a > div > em").text().replace(" ", "");
+                    Float myStarscorerb = Float.parseFloat(elem.select("div.mv_info_area > div.mv_info > div.main_score > div.score.score_left > div.star_score > a > em").text().replace(" ", ""));
+                    String myStarscore = elem.select("div.mv_info_area > div.mv_info > div.main_score > div.score.score_left > div.star_score > a > em").text().replace(" ", "");
+                    String myAudiencecnt = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(8) > div > p").text();
+                    String mySynopsis = elem.select("div.section_group.section_group_frst > div:nth-child(1) > div > div").text();
+                    String myDirector = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(4) > p > a").text();
+
+                    mdList.add(new MovieDetail(myTitle, myImgUrl, myRelease, myGenre, myRuntime, myGrade,
+                            mySpcscorerb, mySpcscore, myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector));
+//                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -91,27 +102,63 @@ public class DetailActivity extends AppCompatActivity {
 
             progressDialog.dismiss();
 
-            Intent inIntent = getIntent();
-            final int posValue = inIntent.getIntExtra("pos", 0);
-
-            tvMovieTitle = findViewById(R.id.tvMovieTitle);
-            tvMovieRelease = findViewById(R.id.tvMovieRelease);
-            tvMovieGenre = findViewById(R.id.tvMovieGenre);
-            tvLikeCount = findViewById(R.id.tvLikeCount);
-            tvRank = findViewById(R.id.tvRate);
-            tvRate = findViewById(R.id.tvRate);
-            tvAudience = findViewById(R.id.tvAudience);
+            tvMTitle = findViewById(R.id.tvMovieTitle);
+            tvMRelease = findViewById(R.id.tvMovieRelease);
+            tvMGenre = findViewById(R.id.tvMovieGenre);
+            tvMRuntime = findViewById(R.id.tvRuntime);
+            tvGrade = findViewById(R.id.tvGrade);
+            // tvLikeCount = findViewById(R.id.tvLikeCount);
+            tvSpcscore = findViewById(R.id.tvSpcscore);
+            tvStarscore = findViewById(R.id.tvStarscore);
+            tvAudiencecnt = findViewById(R.id.tvAudiencecnt);
             tvSynopsis = findViewById(R.id.tvSynopsis);
             tvDirector = findViewById(R.id.tvDirector);
-            tvActor = findViewById(R.id.tvActor);
-            tvGrade = findViewById(R.id.tvGrade);
+            // tvActor = findViewById(R.id.tvActor);
+
+            rbSpcscore = findViewById(R.id.rbSpcscore);
+            rbStarscore = findViewById(R.id.rbStarscore);
+
+            // mdList에 add한 값 화면에 뿌려주기
+            tvMTitle.setText(mdList.get(0).getD_title());
 
             ivBigPoster = findViewById(R.id.ivBigPoster);
-            GlideApp.with(ivBigPoster).load(mdList.get(1).getD_img_url())
-                    .override(300,400)
+            GlideApp.with(ivBigPoster).load(mdList.get(0).getD_img_url())
+                    .override(350,550)
                     .into(ivBigPoster);
 
-            tvMovieTitle.setText(mdList.get(0).getD_title());
+            tvMRelease.setText(mdList.get(0).getD_release());
+
+            if(mdList.get(0).getD_genre() != null) {
+                tvMGenre.setText(mdList.get(0).getD_genre());
+            } else {
+                tvMGenre.setText(" ");
+            }
+
+            tvMRuntime.setText(mdList.get(0).getD_runtime());
+
+            tvGrade.setText(mdList.get(0).getD_grade());
+
+            if(mdList.get(0).getD_spcscorerb().equals("") && mdList.get(0).getD_spcscore().equals("")) {
+                rbSpcscore.setRating(0);
+                tvSpcscore.setText("평점 없음");
+            } else {
+                rbSpcscore.setRating(mdList.get(0).getD_spcscorerb());
+                tvSpcscore.setText(mdList.get(0).getD_spcscore());
+            }
+
+            if(mdList.get(0).getD_starscorerb() != null && mdList.get(0).getD_starscore() != null) {
+                rbStarscore.setRating(mdList.get(0).getD_starscorerb());
+                tvStarscore.setText(mdList.get(0).getD_starscore());
+            } else {
+                rbStarscore.setRating(0);
+                tvStarscore.setText("평점 없음");
+            }
+
+            tvAudiencecnt.setText(mdList.get(0).getD_audiencecnt());
+
+            tvSynopsis.setText(mdList.get(0).getD_synopsis());
+
+            tvDirector.setText(mdList.get(0).getD_director());
 
         }
 

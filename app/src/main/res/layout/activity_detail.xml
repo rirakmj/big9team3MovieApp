@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="?attr/actionBarSize">
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,55 +14,39 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="250dp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/ivBigPoster"
-                android:layout_width="124dp"
-                android:layout_height="182dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp" />
-
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="230dp"
+                android:layout_height="240dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                android:paddingTop="20dp">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvMovieTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvMovieTitle"
-                        android:layout_width="132dp"
-                        android:layout_height="wrap_content"
-                        android:text="영화 제목"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvGrade"
-                        android:layout_width="124dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="5dp" />
-
-                </LinearLayout>
+                    android:layout_height="98dp"
+                    android:text="영화 제목"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvMovieRelease"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:text="개봉일"
-                    android:textSize="18sp" />
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tvMovieGenre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="장르"
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -70,32 +54,32 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tvMovieGenre"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="장르"
-                        android:textSize="18sp" />
-
-                    <TextView
+                        android:id="@+id/tvRuntime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:text="상영시간"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tvGrade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:text="등급"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="147dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnlike"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="15dp"
                         android:background="@drawable/like" />
 
                     <TextView
@@ -104,143 +88,151 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="15dp"
                         android:layout_weight="1"
                         android:text="좋아요 누른 수"
-                        android:textSize="18sp" />
-
-                    <!--                    <Button-->
-                    <!--                        android:id="@+id/dislikeButton"-->
-                    <!--                        android:layout_width="30dp"-->
-                    <!--                        android:layout_height="30dp"-->
-                    <!--                        android:layout_marginTop="20dp"-->
-                    <!--                        android:background="@drawable/down_clicked" />-->
-
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/dislikeCountView"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_centerVertical="true"-->
-                    <!--                        android:layout_marginStart="5dp"-->
-                    <!--                        android:layout_marginTop="20dp"-->
-                    <!--                        android:layout_weight="1"-->
-                    <!--                        android:text="1"-->
-                    <!--                        android:textColor="#ffffffff"-->
-                    <!--                        android:textSize="18sp" />-->
+                        android:textSize="20sp" />
 
                 </LinearLayout>
+
             </LinearLayout>
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/colorButtonNormal"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp">
+
+            <ImageView
+                android:id="@+id/ivBigPoster"
+                android:layout_width="165dp"
+                android:layout_height="240dp" />
+
+        </LinearLayout>
+
+
+        <!--                    <Button-->
+        <!--                        android:id="@+id/dislikeButton"-->
+        <!--                        android:layout_width="30dp"-->
+        <!--                        android:layout_height="30dp"-->
+        <!--                        android:layout_marginTop="20dp"-->
+        <!--                        android:background="@drawable/down_clicked" />-->
+
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/dislikeCountView"-->
+        <!--                        android:layout_width="wrap_content"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:layout_centerVertical="true"-->
+        <!--                        android:layout_marginStart="5dp"-->
+        <!--                        android:layout_marginTop="20dp"-->
+        <!--                        android:layout_weight="1"-->
+        <!--                        android:text="1"-->
+        <!--                        android:textColor="#ffffffff"-->
+        <!--                        android:textSize="18sp" />-->
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorButtonNormal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@android:color/darker_gray"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@android:color/darker_gray"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvTitle1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="1dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@android:color/background_light"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvTitle1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="평점순위"
-                        android:textSize="14sp" />
-
-
-                    <TextView
-                        android:id="@+id/tvRank"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="평점순위"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/background_light"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:text="기자·평론가"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RatingBar
+                        android:id="@+id/rbSpcscore"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="0.05" />
 
                     <TextView
-                        android:id="@+id/tvTitle2"
+                        android:id="@+id/tvSpcscore"
                         android:layout_width="match_parent"
-                        android:layout_height="42dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="평점"
                         android:textSize="14sp" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <RatingBar
-                            android:id="@+id/rbRatingBar"
-                            style="?android:attr/ratingBarStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:numStars="5"
-                            android:rating="3.5"
-                            android:stepSize="0.1" />
-
-                        <TextView
-                            android:id="@+id/tvRate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="평점"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
                 </LinearLayout>
 
-                <LinearLayout
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="@android:color/background_light"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTitle2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="42dp"
                     android:layout_weight="1"
-                    android:background="@android:color/background_light"
-                    android:orientation="vertical">
+                    android:gravity="center"
+                    android:text="네티즌"
+                    android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/tvTitle3"
-                        android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RatingBar
+                        android:id="@+id/rbStarscore"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="누적관객수"
-                        android:textSize="14sp" />
+                        android:isIndicator="false"
+                        android:max="10"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="0.01" />
 
                     <TextView
-                        android:id="@+id/tvAudience"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tvStarscore"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="누적관객수"
+                        android:text="평점"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -250,232 +242,260 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:background="@android:color/background_light"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvTitle4"
+                    android:id="@+id/tvTitle3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:text="줄거리"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="누적관객수"
+                    android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/tvSynopsis"
+                    android:id="@+id/tvAudiencecnt"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:singleLine="false"
-                    android:text="줄거리"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="누적관객수"
                     android:textSize="14sp" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/galleryView"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/background_light"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTitle4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="줄거리"
+                android:textColor="@android:color/background_dark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSynopsis"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:singleLine="false"
+                android:text="줄거리"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/galleryView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/background_light"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvTitle5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:text="갤러리"
+                android:textColor="@android:color/background_dark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="10dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/background_light"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:clipToPadding="false"
+                android:paddingBottom="10dp" />
 
-                <TextView
-                    android:id="@+id/tvTitle5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:text="갤러리"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    tools:layout_editor_absoluteX="10dp"/>
+        </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:clipToPadding="false"
-                    android:paddingBottom="10dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/background_light"
+            android:orientation="vertical">
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tvTitle6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="감독/출연"
+                android:textColor="@android:color/background_dark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/background_light"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvTitle6"
-                    android:layout_width="match_parent"
+                    android:id="@+id/tvTitle7"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="감독/출연"
+                    android:text="감독"
                     android:textColor="@android:color/background_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tvDirector"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvTitle7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="감독"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/tvDirector"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="감독"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvTitle8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="출연"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/tvActor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="출연자"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="감독"
+                    android:textSize="18sp" />
             </LinearLayout>
-
-            <!--            <LinearLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:layout_marginTop="10dp"-->
-            <!--                android:background="@android:color/background_light"-->
-            <!--                android:orientation="vertical">-->
-
-            <!--                <RelativeLayout-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content">-->
-
-            <!--                    <TextView-->
-            <!--                        android:id="@+id/textView18"-->
-            <!--                        android:layout_width="wrap_content"-->
-            <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:layout_marginStart="10dp"-->
-            <!--                        android:layout_marginTop="20dp"-->
-            <!--                        android:text="한줄평"-->
-            <!--                        android:textColor="@android:color/background_dark"-->
-            <!--                        android:textSize="18sp"-->
-            <!--                        android:textStyle="bold" />-->
-
-            <!--                    <LinearLayout-->
-            <!--                        android:layout_width="wrap_content"-->
-            <!--                        android:layout_height="wrap_content"-->
-            <!--                        android:layout_alignParentRight="true"-->
-            <!--                        android:layout_marginRight="10dp"-->
-            <!--                        android:layout_marginTop="10dp"-->
-            <!--                        android:orientation="horizontal">-->
-
-            <!--                        <Button-->
-            <!--                            android:layout_width="27dp"-->
-            <!--                            android:layout_height="30dp"-->
-            <!--                             />-->
-
-            <!--                        <Button-->
-            <!--                            android:id="@+id/writeButton"-->
-            <!--                            android:layout_width="wrap_content"-->
-            <!--                            android:layout_height="wrap_content"-->
-            <!--                            android:background="#ffffffff"-->
-            <!--                            android:text="작성하기"-->
-            <!--                            android:textColor="@android:color/holo_red_light"-->
-            <!--                            android:textSize="18sp"-->
-            <!--                            android:textStyle="bold" />-->
-
-            <!--                    </LinearLayout>-->
-
-            <!--                </RelativeLayout>-->
-
-            <!--                <ListView-->
-            <!--                    android:id="@+id/listView"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="200dp"-->
-            <!--                    android:layout_marginHorizontal="10dp">-->
-
-            <!--                </ListView>-->
-
-            <!--                <Button-->
-            <!--                    android:id="@+id/allViewButton"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="50dp"-->
-            <!--                    android:layout_alignBottom="@id/listView"-->
-            <!--                    android:layout_marginBottom="10dp"-->
-            <!--                    android:layout_marginHorizontal="10dp"-->
-            <!--                    android:background="@drawable/linear_border_purple"-->
-            <!--                    android:gravity="center"-->
-            <!--                    android:text="모두 보기"-->
-            <!--                    android:textColor="@android:color/holo_purple"-->
-            <!--                    android:textSize="18sp" />-->
-
-            <!--            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/background_light"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btnStarReview"
+                <TextView
+                    android:id="@+id/tvTitle8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="내 평점 등록" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="출연"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="18sp" />
 
-                <Button
-                    android:id="@+id/btnReview"
+                <TextView
+                    android:id="@+id/tvActor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="내 리뷰 등록" />
-
-                <Button
-                    android:id="@+id/btnBooking"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="예매하기" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="출연자"
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </LinearLayout>
+
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_marginTop="10dp"-->
+        <!--                android:background="@android:color/background_light"-->
+        <!--                android:orientation="vertical">-->
+
+        <!--                <RelativeLayout-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="wrap_content">-->
+
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/textView18"-->
+        <!--                        android:layout_width="wrap_content"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:layout_marginStart="10dp"-->
+        <!--                        android:layout_marginTop="20dp"-->
+        <!--                        android:text="한줄평"-->
+        <!--                        android:textColor="@android:color/background_dark"-->
+        <!--                        android:textSize="18sp"-->
+        <!--                        android:textStyle="bold" />-->
+
+        <!--                    <LinearLayout-->
+        <!--                        android:layout_width="wrap_content"-->
+        <!--                        android:layout_height="wrap_content"-->
+        <!--                        android:layout_alignParentRight="true"-->
+        <!--                        android:layout_marginRight="10dp"-->
+        <!--                        android:layout_marginTop="10dp"-->
+        <!--                        android:orientation="horizontal">-->
+
+        <!--                        <Button-->
+        <!--                            android:layout_width="27dp"-->
+        <!--                            android:layout_height="30dp"-->
+        <!--                             />-->
+
+        <!--                        <Button-->
+        <!--                            android:id="@+id/writeButton"-->
+        <!--                            android:layout_width="wrap_content"-->
+        <!--                            android:layout_height="wrap_content"-->
+        <!--                            android:background="#ffffffff"-->
+        <!--                            android:text="작성하기"-->
+        <!--                            android:textColor="@android:color/holo_red_light"-->
+        <!--                            android:textSize="18sp"-->
+        <!--                            android:textStyle="bold" />-->
+
+        <!--                    </LinearLayout>-->
+
+        <!--                </RelativeLayout>-->
+
+        <!--                <ListView-->
+        <!--                    android:id="@+id/listView"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="200dp"-->
+        <!--                    android:layout_marginHorizontal="10dp">-->
+
+        <!--                </ListView>-->
+
+        <!--                <Button-->
+        <!--                    android:id="@+id/allViewButton"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="50dp"-->
+        <!--                    android:layout_alignBottom="@id/listView"-->
+        <!--                    android:layout_marginBottom="10dp"-->
+        <!--                    android:layout_marginHorizontal="10dp"-->
+        <!--                    android:background="@drawable/linear_border_purple"-->
+        <!--                    android:gravity="center"-->
+        <!--                    android:text="모두 보기"-->
+        <!--                    android:textColor="@android:color/holo_purple"-->
+        <!--                    android:textSize="18sp" />-->
+
+        <!--            </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/background_light"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnStarReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내 평점 등록" />
+
+            <Button
+                android:id="@+id/btnReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내 리뷰 등록" />
+
+            <Button
+                android:id="@+id/btnBooking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="예매하기" />
+        </LinearLayout>
+
     </LinearLayout>
-</ScrollView>
+</LinearLayout></ScrollView>

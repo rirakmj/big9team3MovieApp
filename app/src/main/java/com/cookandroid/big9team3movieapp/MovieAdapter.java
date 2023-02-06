@@ -89,7 +89,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         GlideApp.with(holder.itemView).load(mList.get(position).getImg_url())
                 .override(300,400)
                 .into(holder.ivPoster);
-
         holder.tvTitle.setText(String.valueOf(mList.get(position).getTitle()));
         holder.tvRelease.setText(String.valueOf(mList.get(position).getRelease()));
         holder.tvDirector.setText(String.valueOf(mList.get(position).getDirector()));

@@ -18,7 +18,8 @@
         android:orientation="vertical"
         android:layout_toRightOf="@+id/ivPoster"
         android:layout_marginTop="16dp"
-        android:layout_marginLeft="8dp">
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
 
     <TextView
         android:id="@+id/tvTitle"

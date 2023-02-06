@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
 
     Button btnLoginPage, btnMyPage;
+    TextView tvTitle;
 
     private RecyclerView recyclerView;
     private ArrayList<Movie> mList = new ArrayList<>();
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         btnLoginPage = (Button) findViewById(R.id.btnLoginPage);
         btnMyPage = (Button) findViewById(R.id.btnMyPage);
 
+
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id)).requestEmail().build();
         //파이어베이스 인증객체 생성
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         if (user != null) {
             btnLoginPage.setVisibility(View.INVISIBLE);
             btnMyPage.setVisibility(View.VISIBLE);
+
 
             // 마이페이지로 이동
             btnMyPage.setOnClickListener(new View.OnClickListener() {
@@ -115,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
                     String myLink = elem.select("li div[class=thumb] a").attr("href"); // 상세 정보 링크
                     String myImgUrl = elem.select("li div[class=thumb] a img").attr("src"); // 포스터
                     Element rElem = elem.select("dl[class=info_txt1] dt").next().first();
-                    String myRelease = rElem.select("dd").text();
-                    Element dElem = elem.select("dt[class=tit_t2]").next().first();
+                    String myRelease = "개요: " + rElem.select("dd").text();
+                    Element dElem = elem.select("dl[class=info_txt1] dt").select("dt[class=tit_t2]").next().first();
                     String myDirector = "감독: " + dElem.select("a").text();
 
                     mList.add(new Movie(myTitle, myLink, myImgUrl, myRelease, myDirector));
