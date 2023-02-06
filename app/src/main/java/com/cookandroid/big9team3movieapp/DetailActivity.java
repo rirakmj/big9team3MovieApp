@@ -24,9 +24,9 @@ public class DetailActivity extends AppCompatActivity {
 
     private ArrayList<MovieDetail> mdList = new ArrayList<>();
 
-    TextView tvMTitle, tvMRelease, tvMGenre, tvMRuntime, tvLikeCount, tvSpcscore, tvStarscore, tvAudiencecnt, tvSynopsis, tvDirector, tvActor, tvGrade;
+    TextView tvMTitle, tvMRelease, tvMGenre, tvGrade, tvMRuntime, tvLikeCount, tvStarscore, tvAudiencecnt, tvSynopsis, tvDirector, tvActor;
     ImageView ivBigPoster;
-    RatingBar rbSpcscore, rbStarscore;
+    RatingBar rbStarscore;
 
     Button btnlike, btnStarReview, btnReview, btnBooking;
 
@@ -65,31 +65,45 @@ public class DetailActivity extends AppCompatActivity {
                 Elements elem = doc.select("#content > div.article");
 //                int mElementSize = mElementDataSize.size();
 
+                if (elem.select("div div dl dt[class=step3]").isEmpty()) {
+
 //                for (Element elem : mElementDataSize) {
                     String myTitle = elem.select("div.mv_info_area > div.mv_info > h3 > a:nth-child(1)").text(); // 영화 제목
                     String myImgUrl = elem.select("div.mv_info_area > div.poster > a > img").attr("src"); // 포스터 링크
 //                    String myStarrating = elem.select("div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(2) > div > a > em").text();
 //                    Log.d("likecnt", "like: " +myStarrating);
-                    String myRelease = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(4)").text(); // 개봉일
+                    String myRelease = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(4)").text().replace(" ", ""); // 개봉일
                     String myGenre = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(1)").text().replace(" ", ""); // 영화 장르
                     String myRuntime = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(3)").text();
                     String myGrade = elem.select("div div dl dt[class=step4]").next().first().text().replace(" ", "");
-                    Log.d("grade", "grade: "+myGrade);
-
-                    // String myLikecnt
-                    Float mySpcscorerb = Float.parseFloat(elem.select("div.mv_info_area > div.mv_info > div.main_score > div:nth-child(2) > div > a > div > em").text().replace(" ", ""));
-                    if (mySpcscorerb.equals("")) {
-                        String src = "평점 없음";
-                    }
-                    String mySpcscore = elem.select("div.mv_info_area > div.mv_info > div.main_score > div:nth-child(2) > div > a > div > em").text().replace(" ", "");
                     Float myStarscorerb = Float.parseFloat(elem.select("div.mv_info_area > div.mv_info > div.main_score > div.score.score_left > div.star_score > a > em").text().replace(" ", ""));
                     String myStarscore = elem.select("div.mv_info_area > div.mv_info > div.main_score > div.score.score_left > div.star_score > a > em").text().replace(" ", "");
-                    String myAudiencecnt = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(8) > div > p").text();
-                    String mySynopsis = elem.select("div.section_group.section_group_frst > div:nth-child(1) > div > div").text();
+                    String myAudiencecnt = elem.select("div div dl dt[class=step9]").next().select("p[class=count]").text().replace(" ", "");
+                    String mySynopsis = elem.select("div.section_group.section_group_frst > div:nth-child(1) > div > div > p").text();
                     String myDirector = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(4) > p > a").text();
 
                     mdList.add(new MovieDetail(myTitle, myImgUrl, myRelease, myGenre, myRuntime, myGrade,
-                            mySpcscorerb, mySpcscore, myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector));
+                            myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector, "출연진 없음"));
+                } else {
+                    String myTitle = elem.select("div.mv_info_area > div.mv_info > h3 > a:nth-child(1)").text(); // 영화 제목
+                    String myImgUrl = elem.select("div.mv_info_area > div.poster > a > img").attr("src"); // 포스터 링크
+//                    String myStarrating = elem.select("div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(2) > div > a > em").text();
+//                    Log.d("likecnt", "like: " +myStarrating);
+                    String myRelease = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(4)").text().replace(" ", ""); // 개봉일
+                    String myGenre = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(1)").text().replace(" ", ""); // 영화 장르
+                    String myRuntime = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(3)").text();
+                    String myGrade = elem.select("div div dl dt[class=step4]").next().first().text().replace(" ", "");
+                    Float myStarscorerb = Float.parseFloat(elem.select("div.mv_info_area > div.mv_info > div.main_score > div.score.score_left > div.star_score > a > em").text().replace(" ", ""));
+                    String myStarscore = elem.select("div.mv_info_area > div.mv_info > div.main_score > div.score.score_left > div.star_score > a > em").text().replace(" ", "");
+                    String myAudiencecnt = elem.select("div div dl dt[class=step9]").next().select("p[class=count]").text().replace(" ", "");
+                    String mySynopsis = elem.select("div.section_group.section_group_frst > div:nth-child(1) > div > div > p").text();
+                    String myDirector = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(4) > p > a").text();
+                    String myActor = elem.select("div div dl dt[class=step3]").next().first().select("p").text();
+
+                    mdList.add(new MovieDetail(myTitle, myImgUrl, myRelease, myGenre, myRuntime, myGrade,
+                            myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector, myActor));
+                }
+
 //                }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,14 +122,12 @@ public class DetailActivity extends AppCompatActivity {
             tvMRuntime = findViewById(R.id.tvRuntime);
             tvGrade = findViewById(R.id.tvGrade);
             // tvLikeCount = findViewById(R.id.tvLikeCount);
-            tvSpcscore = findViewById(R.id.tvSpcscore);
             tvStarscore = findViewById(R.id.tvStarscore);
             tvAudiencecnt = findViewById(R.id.tvAudiencecnt);
             tvSynopsis = findViewById(R.id.tvSynopsis);
             tvDirector = findViewById(R.id.tvDirector);
-            // tvActor = findViewById(R.id.tvActor);
+            tvActor = findViewById(R.id.tvActor);
 
-            rbSpcscore = findViewById(R.id.rbSpcscore);
             rbStarscore = findViewById(R.id.rbStarscore);
 
             // mdList에 add한 값 화면에 뿌려주기
@@ -138,21 +150,8 @@ public class DetailActivity extends AppCompatActivity {
 
             tvGrade.setText(mdList.get(0).getD_grade());
 
-            if(mdList.get(0).getD_spcscorerb().equals("") && mdList.get(0).getD_spcscore().equals("")) {
-                rbSpcscore.setRating(0);
-                tvSpcscore.setText("평점 없음");
-            } else {
-                rbSpcscore.setRating(mdList.get(0).getD_spcscorerb());
-                tvSpcscore.setText(mdList.get(0).getD_spcscore());
-            }
-
-            if(mdList.get(0).getD_starscorerb() != null && mdList.get(0).getD_starscore() != null) {
-                rbStarscore.setRating(mdList.get(0).getD_starscorerb());
-                tvStarscore.setText(mdList.get(0).getD_starscore());
-            } else {
-                rbStarscore.setRating(0);
-                tvStarscore.setText("평점 없음");
-            }
+            rbStarscore.setRating(mdList.get(0).getD_starscorerb());
+            tvStarscore.setText(mdList.get(0).getD_starscore());
 
             tvAudiencecnt.setText(mdList.get(0).getD_audiencecnt());
 
@@ -160,6 +159,11 @@ public class DetailActivity extends AppCompatActivity {
 
             tvDirector.setText(mdList.get(0).getD_director());
 
+            if (mdList.get(0).getD_actor().equals("출연진 없음")) {
+                tvActor.setText("출연진 없음");
+            } else {
+                tvActor.setText(mdList.get(0).getD_actor());
+            }
         }
 
 

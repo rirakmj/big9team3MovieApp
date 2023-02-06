@@ -7,33 +7,32 @@ public class MovieDetail {
     public String d_genre;
     public String d_runtime;
     public String d_grade;
-    public Float d_spcscorerb;
-    public String d_spcscore;
     public Float d_starscorerb;
     public String d_starscore;
     public String d_audiencecnt;
     public String d_synopsis;
     public String d_director;
+    public String d_actor;
+    //public String d_actor2;
 
 //    public String d_likecnt;
-//    public String d_actor;
 
     public MovieDetail(String title, String url, String release, String genre, String runtime,
-                       String grade, Float spcscorerb, String spcscore, Float starscorerb, String starscore,
-                       String audiencecnt, String synopsis, String director) {
+                       String grade, Float starscorerb, String starscore,
+                       String audiencecnt, String synopsis, String director, String actor) {
         this.d_title = title;
         this.d_img_url = url;
         this.d_release = release;
         this.d_genre = genre;
         this.d_runtime = runtime;
         this.d_grade = grade;
-        this.d_spcscorerb = spcscorerb;
-        this.d_spcscore = spcscore;
         this.d_starscorerb = starscorerb;
         this.d_starscore = starscore;
         this.d_audiencecnt = audiencecnt;
         this.d_synopsis = synopsis;
         this.d_director = director;
+        this.d_actor = actor;
+        //this.d_actor2 = actor2;
     }
 
     public String getD_title() {
@@ -84,22 +83,6 @@ public class MovieDetail {
         this.d_grade = d_grade;
     }
 
-    public Float getD_spcscorerb() {
-        return d_spcscorerb;
-    }
-
-    public void setD_spcscorerb(Float d_spcscorerb) {
-        this.d_spcscorerb = d_spcscorerb;
-    }
-
-    public String getD_spcscore() {
-        return d_spcscore;
-    }
-
-    public void setD_spcscore(String d_spcscore) {
-        this.d_spcscore = d_spcscore;
-    }
-
     public Float getD_starscorerb() {
         return d_starscorerb;
     }
@@ -139,4 +122,20 @@ public class MovieDetail {
     public void setD_director(String d_director) {
         this.d_director = d_director;
     }
+
+    public String getD_actor() {
+        return d_actor;
+    }
+
+    public void setD_actor(String d_actor) {
+        this.d_actor = d_actor;
+    }
+
+//    public String getD_actor2() {
+//        return d_actor2;
+//    }
+//
+//    public void setD_actor2(String d_actor2) {
+//        this.d_actor2 = d_actor2;
+//    }
 }

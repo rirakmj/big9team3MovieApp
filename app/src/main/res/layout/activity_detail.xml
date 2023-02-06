@@ -14,19 +14,19 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="275dp"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="230dp"
-                android:layout_height="240dp"
+                android:layout_width="210dp"
+                android:layout_height="260dp"
                 android:layout_marginStart="10dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvMovieTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="98dp"
+                    android:layout_height="100dp"
                     android:text="영화 제목"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -35,38 +35,39 @@
                     android:id="@+id/tvMovieRelease"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:text="개봉일"
-                    android:textSize="20sp" />
+                    android:textSize="21sp" />
 
                 <TextView
                     android:id="@+id/tvMovieGenre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:text="장르"
-                    android:textSize="16sp" />
+                    android:textSize="17sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvRuntime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="상영시간"
-                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tvGrade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
                         android:text="등급"
-                        android:textSize="16sp" />
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tvRuntime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="상영시간"
+                        android:textSize="17sp" />
 
                 </LinearLayout>
 
@@ -75,11 +76,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/btnlike"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="10dp"
                         android:background="@drawable/like" />
 
                     <TextView
@@ -88,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="20dp"
                         android:layout_weight="1"
                         android:text="좋아요 누른 수"
                         android:textSize="20sp" />
@@ -97,40 +98,40 @@
 
             </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp">
 
-            <ImageView
-                android:id="@+id/ivBigPoster"
-                android:layout_width="165dp"
-                android:layout_height="240dp" />
+                <ImageView
+                    android:id="@+id/ivBigPoster"
+                    android:layout_width="185dp"
+                    android:layout_height="260dp" />
+
+            </LinearLayout>
+
+
+            <!--                    <Button-->
+            <!--                        android:id="@+id/dislikeButton"-->
+            <!--                        android:layout_width="30dp"-->
+            <!--                        android:layout_height="30dp"-->
+            <!--                        android:layout_marginTop="20dp"-->
+            <!--                        android:background="@drawable/down_clicked" />-->
+
+            <!--                    <TextView-->
+            <!--                        android:id="@+id/dislikeCountView"-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_centerVertical="true"-->
+            <!--                        android:layout_marginStart="5dp"-->
+            <!--                        android:layout_marginTop="20dp"-->
+            <!--                        android:layout_weight="1"-->
+            <!--                        android:text="1"-->
+            <!--                        android:textColor="#ffffffff"-->
+            <!--                        android:textSize="18sp" />-->
+
 
         </LinearLayout>
-
-
-        <!--                    <Button-->
-        <!--                        android:id="@+id/dislikeButton"-->
-        <!--                        android:layout_width="30dp"-->
-        <!--                        android:layout_height="30dp"-->
-        <!--                        android:layout_marginTop="20dp"-->
-        <!--                        android:background="@drawable/down_clicked" />-->
-
-        <!--                    <TextView-->
-        <!--                        android:id="@+id/dislikeCountView"-->
-        <!--                        android:layout_width="wrap_content"-->
-        <!--                        android:layout_height="wrap_content"-->
-        <!--                        android:layout_centerVertical="true"-->
-        <!--                        android:layout_marginStart="5dp"-->
-        <!--                        android:layout_marginTop="20dp"-->
-        <!--                        android:layout_weight="1"-->
-        <!--                        android:text="1"-->
-        <!--                        android:textColor="#ffffffff"-->
-        <!--                        android:textSize="18sp" />-->
-
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -160,8 +161,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="기자·평론가"
-                    android:textSize="14sp" />
+                    android:text="내 평점"
+                    android:textSize="15sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -186,7 +187,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="평점"
-                        android:textSize="14sp" />
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -208,7 +209,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="네티즌"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -233,7 +234,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="평점"
-                        android:textSize="14sp" />
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
@@ -253,7 +254,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="누적관객수"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tvAudiencecnt"
@@ -262,7 +263,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="누적관객수"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
