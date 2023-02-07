@@ -52,7 +52,7 @@ public class DetailActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
-        // 로그인 유무 확인
+        // 로그인 유무에 따라 버튼 보이기/숨기기
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         btnStarReview = findViewById(R.id.btnStarReview);
@@ -61,34 +61,11 @@ public class DetailActivity extends AppCompatActivity {
         rbMyscore = findViewById(R.id.rbMyscore);
         tvMyscore = findViewById(R.id.tvMyscore);
 
-        //예매하기 이벤트처리
-            btnBooking.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), BookingActivity.class);
-                    startActivity(intent);
-                }
-            });
-
-        //별점리뷰 이벤트처리
-        btnStarReview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ReviewwithstarActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //리뷰 페이지 이벤트 처리
-        btnReview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
+        if (user == null) {
+            btnStarReview.setVisibility(View.INVISIBLE);
+            btnReview.setVisibility(View.INVISIBLE);
+            btnBooking.setVisibility(View.INVISIBLE);
+        }
 
         new Description().execute();
     }
@@ -209,8 +186,8 @@ public class DetailActivity extends AppCompatActivity {
 
             tvLikeCount.setText(mdList.get(0).getD_likecnt());
 
-            rbStarscore.setRating(Math.round(mdList.get(0).getD_starscorerb()/2*100)/100);
-            tvStarscore.setText((mdList.get(0).getD_starscore()/2) + "");
+            rbStarscore.setRating(mdList.get(0).getD_starscorerb()/2*100/100.0f);
+            tvStarscore.setText(String.format("%.2f", (mdList.get(0).getD_starscore()/2)));
 
             tvAudiencecnt.setText(mdList.get(0).getD_audiencecnt());
 
@@ -229,6 +206,41 @@ public class DetailActivity extends AppCompatActivity {
                 public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                     tvMyscore.setText(rating + "");
 
+                }
+            });
+
+            //예매하기 이벤트처리
+            btnBooking.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), BookingActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            //별점리뷰 이벤트처리
+            btnStarReview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String mTitle = mdList.get(0).getD_title();
+                    String mImgurl = mdList.get(0).getD_img_url();
+                    Intent intent = new Intent(getApplicationContext(), ReviewwithstarActivity.class);
+                    intent.putExtra("mTitle", mTitle);
+                    intent.putExtra("mImgurl", mImgurl);
+                    startActivity(intent);
+                }
+            });
+
+            //리뷰 페이지 이벤트 처리
+            btnReview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String mTitle = mdList.get(0).getD_title();
+                    String mImgurl = mdList.get(0).getD_img_url();
+                    Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
+                    intent.putExtra("mTitle", mTitle);
+                    intent.putExtra("mImgurl", mImgurl);
+                    startActivity(intent);
                 }
             });
 

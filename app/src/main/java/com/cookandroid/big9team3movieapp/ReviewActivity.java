@@ -3,6 +3,7 @@ package com.cookandroid.big9team3movieapp;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,19 +33,22 @@ import java.util.Date;
 import java.util.Objects;
 
 public class ReviewActivity extends AppCompatActivity {
+    ArrayList<MovieDetail> mdList;
+
+    ImageView ivRM;
+    TextView tvRM,tvRM2;
+    Button buttonAdd;
+
+    RecyclerView recyclerView;
+    ArrayList<ReviewItem> reviewItemArrayList;
+    ReviewRecyclerAdapter adapter;
 
     DatabaseReference databaseReference;
 
-    RecyclerView recyclerView;
-
-    ArrayList<ReviewItem> reviewItemArrayList;
-    ReviewRecyclerAdapter adapter;
-    Button buttonAdd;
     ArrayList<UserAccount> userAccountArrayList;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mReference = mDatabase.getReference();
-
 
     long mNow;
     Date regdate;
@@ -64,8 +69,19 @@ public class ReviewActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-
         reviewItemArrayList = new ArrayList<>();
+
+        Intent intent = getIntent();
+        String mTitle = intent.getStringExtra("mTitle");
+        String mImgurl = intent.getStringExtra("mImgurl");
+
+        tvRM = findViewById(R.id.tvRM);
+        ivRM = findViewById(R.id.ivRM);
+
+        tvRM.setText(mTitle);
+        GlideApp.with(ivRM).load(mImgurl)
+                .override(250, 450)
+                .into(ivRM);
 
         buttonAdd = findViewById(R.id.buttonAdd);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +94,7 @@ public class ReviewActivity extends AppCompatActivity {
         readData();
     }
 
-    private String getTime(){
+    private String getTime() {
         mNow = System.currentTimeMillis();
         regdate = new Date(mNow);
         return mFormat.format(regdate);
@@ -131,7 +147,7 @@ public class ReviewActivity extends AppCompatActivity {
                     UserAccount user = snapshot.getValue(UserAccount.class);
                     String writer = user.getName();
                     textwriter.setText(writer);
-                    Log.d("info","토큰: "+uid);
+                    Log.d("info", "토큰: " + uid);
                 }
 
                 @Override
@@ -152,14 +168,13 @@ public class ReviewActivity extends AppCompatActivity {
 
                     String writer = textwriter.getText().toString();
                     String content = textcontent.getText().toString();
-                    String regdate = getTime()+"";
-
+                    String regdate = getTime() + "";
 
 
                     if (content.isEmpty()) {
                         Toast.makeText(context, "내용을 입력하세요", Toast.LENGTH_SHORT).show();
                     } else {
-                        databaseReference.child("loginApp").child("REVIEW").push().setValue(new ReviewItem(writer,content,regdate));
+                        databaseReference.child("loginApp").child("REVIEW").push().setValue(new ReviewItem(writer, content, regdate));
                         Toast.makeText(context, "리뷰 작성 완료", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }

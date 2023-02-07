@@ -22,7 +22,8 @@
             android:layout_alignParentTop="true"
             android:layout_margin="10dp"
             android:text="최신 상영작"
-            android:textSize="40dp" />
+            android:textSize="40dp"
+            android:layout_gravity="center"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewMain"
