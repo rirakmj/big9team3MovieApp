@@ -51,9 +51,12 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;                        //툴바
     private NavigationView navigationView;          //숨겨진 네비게이션 뷰
     private DrawerLayout drawerLayout;              //숨겨진 뷰를 여는 레이아웃
+
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); //데이터베이스 객체
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
+
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
     private RecyclerView recyclerView;
     private ArrayList<Movie> mList = new ArrayList<>();
     TextView info; //사용자 아이디
@@ -194,8 +197,9 @@ public class MainActivity extends AppCompatActivity {
                     String myDirector = "감독: " + dElem.select("a").text();
 
                     mList.add(new Movie(myTitle, myLink, myImgUrl, myRelease, myDirector));
+                    addmovie(myTitle, myLink, myImgUrl, myRelease, myDirector);
                 }
-                Log.d("debug: ", "mList " + mElementDataSize);
+                //Log.d("debug: ", "mList " + mElementDataSize);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -221,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                     intent.putExtra("dlink", link);
                     startActivity(intent);
+
                     // 아이템을 클릭하면 상세보기 대화상자가 뜸
 //                    View dialogview = View.inflate(MainActivity.this, R.layout.dialog_detail, null);
 //                    ImageView ivBigPoster = dialogview.findViewById(R.id.ivBigPoster);
@@ -229,9 +234,6 @@ public class MainActivity extends AppCompatActivity {
 //                            .into(ivBigPoster);
 
 //                    Button btnOverview = dialogview.findViewById(R.id.btnOverview);
-//                    Button btnReservation = dialogview.findViewById(R.id.btnReservation);
-//                    Button btnVoting = dialogview.findViewById(R.id.btnVoting);
-//                    Button btnReviewing = dialogview.findViewById(R.id.btnReviewing);
 //
 //                    // 줄거리 보기 버튼 이벤트 처리
 //                    btnOverview.setOnClickListener(new View.OnClickListener() {
@@ -245,33 +247,6 @@ public class MainActivity extends AppCompatActivity {
 //                        }
 //                    });
 //
-//                    //예매하기 이벤트처리
-//                    btnReservation.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent intent = new Intent(getApplicationContext(),BookingActivity.class);
-//                            startActivity(intent);
-//                        }
-//                    });
-//
-//                    //별점리뷰 이벤트처리
-//                    btnVoting.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent intent = new Intent(getApplicationContext(), ReviewwithstarActivity.class);
-//                            startActivity(intent);
-//                        }
-//                    });
-//
-//                    //리뷰 페이지 이벤트 처리
-//                    btnReviewing.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
-//                            startActivity(intent);
-//                        }
-//                    });
-//
 //                    AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
 //                    dlg.setTitle(movie.getTitle());
 //                    dlg.setView(dialogview);
@@ -279,9 +254,12 @@ public class MainActivity extends AppCompatActivity {
 //                    dlg.show();
                 }
             });
-
         }
+    }
 
+    public void addmovie(String title, String link, String url, String release, String director) {
+        Movie movie = new Movie(title, link, url, release, director);
+        databaseReference.child("movie").push().setValue(movie);
     }
 
     private void displayMessage(String message) {
