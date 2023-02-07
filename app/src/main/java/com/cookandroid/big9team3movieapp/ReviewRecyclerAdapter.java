@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,6 +32,9 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
     long mNow;
     Date regdate;
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference mReference = mDatabase.getReference();
+    private FirebaseAuth mFirebaseAuth;
 
     private String getTime() {
         mNow = System.currentTimeMillis();
@@ -43,6 +47,7 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
         this.reviewItemArrayList = reviewItemArrayList;
         databaseReference = FirebaseDatabase.getInstance().getReference();
     }
+
 
     @NonNull
     @Override
@@ -62,6 +67,7 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
         holder.tvcontent.setText("" + reviewItem.getContent());
         holder.tvregdate.setText("등록일 : " + reviewItem.getRegdate());
 
+        ////작성자 아니면 버튼 안뜨게 하기
         holder.buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,7 +145,8 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
 
                 @Override
                 public void onClick(View view) {
-
+                    mFirebaseAuth = FirebaseAuth.getInstance();
+                    String uid = mFirebaseAuth.getUid();
                     String Writer = tvwriter.getText().toString();
                     String Content = tvcontent.getText().toString();
                     String Regdate = getTime() + "";
@@ -151,7 +158,7 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
                         if (Writer.equals(writer) && Content.equals(content) && Regdate.equals(regdate)) {
                             Toast.makeText(context, "you don't change anything", Toast.LENGTH_SHORT).show();
                         } else {
-                            databaseReference.child("REVIEW").child(writer).setValue(new ReviewItem(Writer, Content, Regdate));
+                            databaseReference.child("loginApp").child("REVIEW").child(uid).setValue(new ReviewItem(Writer, Content, Regdate));
                             Toast.makeText(context, "Review Updated successfully!", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
@@ -188,8 +195,9 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //작성자 수정 시 삭제 안됨!! pk값을 writer로 잡아놓음
-                    databaseReference.child("REVIEW").child(writer).removeValue();
+                    mFirebaseAuth = FirebaseAuth.getInstance();
+                    String uid = mFirebaseAuth.getUid();
+                    databaseReference.child("loginApp").child("REVIEW").child(uid).removeValue();
                     Toast.makeText(context, "Deleted successfully!", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
 

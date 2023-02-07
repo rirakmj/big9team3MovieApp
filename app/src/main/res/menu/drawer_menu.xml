@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_movie"
+            android:title="Movie"
+            android:icon="@drawable/ic_movie"/>
+    </group>
+
+    <item android:title=""
+        android:id="@+id/common_menu">
+        <menu>
+            <item
+                android:id="@+id/nav_login"
+                android:icon="@drawable/ic_person"
+                android:title="Login" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="Logout" />
+
+            <item
+                android:id="@+id/nav_booking"
+                android:title="Booking"
+                android:icon="@drawable/ic_booking"
+                android:visible="false"/>
+
+            <item
+                android:id="@+id/nav_setting"
+                android:title="Setting"
+                android:icon="@drawable/ic_setting"
+                android:visible="false"/>
+
+            <item
+                android:id="@+id/nav_delete"
+                android:title="delete"
+                android:icon="@drawable/ic_delete"
+                android:visible="false"/>
+        </menu>
+    </item>
+
+</menu>

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,15 +39,21 @@ public class ReviewActivity extends AppCompatActivity {
     ArrayList<ReviewItem> reviewItemArrayList;
     ReviewRecyclerAdapter adapter;
     Button buttonAdd;
+    ArrayList<UserAccount> userAccountArrayList;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference mReference = mDatabase.getReference();
+
 
     long mNow;
     Date regdate;
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true); // work offline
         Objects.requireNonNull(getSupportActionBar()).hide();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -53,6 +61,8 @@ public class ReviewActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
 
 
         reviewItemArrayList = new ArrayList<>();
@@ -65,7 +75,6 @@ public class ReviewActivity extends AppCompatActivity {
                 viewDialogAdd.showDialog(ReviewActivity.this);
             }
         });
-
         readData();
     }
 
@@ -76,8 +85,8 @@ public class ReviewActivity extends AppCompatActivity {
     }
 
     private void readData() {
-
-        databaseReference.child("REVIEW").orderByChild("writer").addValueEventListener(new ValueEventListener() {
+        String uid = mFirebaseAuth.getUid();
+        databaseReference.child("loginApp").child("REVIEW").addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -114,6 +123,22 @@ public class ReviewActivity extends AppCompatActivity {
             Button buttonCancel = dialog.findViewById(R.id.buttonCancel);
 
             buttonAdd.setText("ADD");
+            String uid = mFirebaseAuth.getUid();
+            mDatabase.getReference().child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    // TextView textwriter = findViewById(R.id.textwriter);
+                    UserAccount user = snapshot.getValue(UserAccount.class);
+                    String writer = user.getName();
+                    textwriter.setText(writer);
+                    Log.d("info","토큰: "+uid);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             buttonCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -124,15 +149,18 @@ public class ReviewActivity extends AppCompatActivity {
             buttonAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     String writer = textwriter.getText().toString();
                     String content = textcontent.getText().toString();
                     String regdate = getTime()+"";
 
-                    if (writer.isEmpty() || content.isEmpty() || regdate.isEmpty()) {
-                        Toast.makeText(context, "Please Enter All data...", Toast.LENGTH_SHORT).show();
+
+
+                    if (content.isEmpty()) {
+                        Toast.makeText(context, "내용을 입력하세요", Toast.LENGTH_SHORT).show();
                     } else {
-                        databaseReference.child("REVIEW").child(writer).setValue(new ReviewItem(writer,content,regdate));
-                        Toast.makeText(context, "DONE!", Toast.LENGTH_SHORT).show();
+                        databaseReference.child("loginApp").child("REVIEW").push().setValue(new ReviewItem(writer,content,regdate));
+                        Toast.makeText(context, "리뷰 작성 완료", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 }

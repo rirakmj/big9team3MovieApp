@@ -7,21 +7,35 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,21 +48,36 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
-
-    Button btnLoginPage, btnMyPage;
-    TextView tvTitle;
-
+    private Toolbar toolbar;                        //툴바
+    private NavigationView navigationView;          //숨겨진 네비게이션 뷰
+    private DrawerLayout drawerLayout;              //숨겨진 뷰를 여는 레이아웃
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); //데이터베이스 객체
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private RecyclerView recyclerView;
     private ArrayList<Movie> mList = new ArrayList<>();
+    TextView info; //사용자 아이디
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("MOVIE");
 
-        btnLoginPage = (Button) findViewById(R.id.btnLoginPage);
-        btnMyPage = (Button) findViewById(R.id.btnMyPage);
+        toolbar = findViewById(R.id.toolBar);
+        setSupportActionBar(toolbar);
 
+        //액션바 객체
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        //뒤로 가기 버튼 이미지 적용
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        navigationView = findViewById(R.id.navigationView);
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        info = findViewById(R.id.Name);
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id)).requestEmail().build();
@@ -56,32 +85,75 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
-        // 로그인 유무 확인
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            btnLoginPage.setVisibility(View.INVISIBLE);
-            btnMyPage.setVisibility(View.VISIBLE);
+        //네비게이션 뷰에서 아이템 선택 시 해당 페이지로 이동 또는 주어진 역할 수행
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_login:
+                        item.setChecked(true);
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
+                        drawerLayout.closeDrawers();
+                        return true;
 
-            // 마이페이지로 이동
-            btnMyPage.setOnClickListener(new View.OnClickListener() {
+                    case R.id.nav_movie:
+                        item.setChecked(true);
+                        drawerLayout.closeDrawers();
+                        return true;
+
+                    case R.id.nav_booking:
+                        item.setChecked(true);
+                        displayMessage("slideshow");
+                        drawerLayout.closeDrawers();
+                        return true;
+
+                    case R.id.nav_setting:
+                        item.setChecked(true);
+                        displayMessage("setting");
+                        drawerLayout.closeDrawers();
+                        return true;
+
+                    case R.id.nav_logout:
+                        item.setChecked(true);
+                        displayMessage("logout");
+                        signOut();
+                        finish();
+                        drawerLayout.closeDrawers();
+                        return true;
+
+                    case R.id.nav_delete:
+                        item.setChecked(true);
+                        displayMessage("remove");
+                        revokeAccess();
+                        finish();
+                        drawerLayout.closeDrawers();
+                        return true;
+                }
+
+                return false;
+            }
+        });
+
+        if (user != null) {
+            //userid를 가져옴
+            String uid = mFirebaseAuth.getUid();
+            databaseReference.getRef().child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), MyPageActivity.class);
-                    startActivity(intent);
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    UserAccount user = snapshot.getValue(UserAccount.class);
+                    String name = user.getName();
+                    info = findViewById(R.id.Name);
+                    info.setText(name + "님 환영합니다");
+                    info.setTextSize(30);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
                 }
             });
-        } else {
-            btnLoginPage.setVisibility(View.VISIBLE);
-            btnMyPage.setVisibility(View.INVISIBLE);
+
         }
-            // 로그인 페이지로 이동
-            btnLoginPage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
-                }
-            });
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewMain);
 
@@ -89,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
         new Description().execute();
     }
 
-    @SuppressLint("StaticFieldLeak")
     private class Description extends AsyncTask<Void, Void, Void> {
 
         // 진행바 표시
@@ -212,7 +283,68 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    private void displayMessage(String message) {
+        Toast.makeText(this, "message", Toast.LENGTH_SHORT).show();
+    }
+
+    //메뉴 선택시 네비게이션 호출
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                addMenuItemInNavMenuDrawer(true);
+                drawerLayout.openDrawer(GravityCompat.START);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void addMenuItemInNavMenuDrawer(boolean flag) {
+        Menu menu = navigationView.getMenu();
+        MenuItem commeMenu = menu.findItem(R.id.common_menu);
+        Menu subMenu = commeMenu.getSubMenu();
+
+        MenuItem login = subMenu.findItem(R.id.nav_login);
+        MenuItem logout = subMenu.findItem(R.id.nav_logout);
+        MenuItem booking = subMenu.findItem(R.id.nav_booking);
+        MenuItem setting = subMenu.findItem(R.id.nav_setting);
+        MenuItem remove = subMenu.findItem(R.id.nav_delete);
+
+        if (user != null) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+
+        if (flag == true) {
+            login.setVisible(false);
+            logout.setVisible(true);
+            booking.setVisible(true);
+            setting.setVisible(true);
+            remove.setVisible(true);
+        } else {
+            login.setVisible(true);
+            logout.setVisible(false);
+            booking.setVisible(false);
+            setting.setVisible(false);
+            remove.setVisible(false);
+        }
+        navigationView.invalidate();
+    }
+
+    private void signOut() {
+        mFirebaseAuth.getInstance().signOut();
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, task -> {
+                });
+        //gsa = null;
+    }
+
+    private void revokeAccess() {
+        mFirebaseAuth.getCurrentUser().delete();
+    }
 }
+
 
 
 

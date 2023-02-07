@@ -9,7 +9,7 @@
     <TabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +31,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#f00000"
-                    android:orientation="horizontal"></LinearLayout>
+                    android:orientation="horizontal">
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/review"
@@ -48,28 +49,40 @@
                     android:orientation="horizontal"></LinearLayout>
             </FrameLayout>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_return"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="돌아가기" />
-
-        <Button
-            android:id="@+id/btn_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="로그아웃" />
-
-        <Button
-            android:id="@+id/btn_out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="탈퇴" />
-
     </TabHost>
+    <TextView
+        android:id="@+id/infotv"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="현재 내 닉네임"></TextView>
+    <Button
+        android:id="@+id/updateDlgBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:onClick="DialogClick"
+        android:text="수정하기" />
+    <Button
+        android:id="@+id/btn_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="돌아가기" />
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="로그아웃" />
+
+    <Button
+        android:id="@+id/btn_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="탈퇴" />
+
+
 
 </LinearLayout>
