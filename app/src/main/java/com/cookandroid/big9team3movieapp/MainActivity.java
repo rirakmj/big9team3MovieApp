@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
             btnLoginPage.setVisibility(View.INVISIBLE);
             btnMyPage.setVisibility(View.VISIBLE);
 
-
             // 마이페이지로 이동
             btnMyPage.setOnClickListener(new View.OnClickListener() {
                 @Override

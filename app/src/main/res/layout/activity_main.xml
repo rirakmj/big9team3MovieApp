@@ -10,9 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:text="현재 상영작"
-        android:textSize="40dp" />
+        android:textSize="35dp" />
 
     <Button
         android:id="@+id/btnLoginPage"
@@ -20,7 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_margin="5dp"
-        android:text="로그인"/>
+        android:text="로그인"
+        android:textSize="20dp"/>
 
 <!--    <Button-->
 <!--        android:id="@+id/btnLogout"-->
@@ -37,6 +40,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="5dp"
         android:text="마이페이지"
+        android:textSize="20dp"
         android:visibility="invisible"/>
 
     <androidx.recyclerview.widget.RecyclerView

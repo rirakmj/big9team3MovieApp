@@ -8,18 +8,16 @@ public class MovieDetail {
     public String d_runtime;
     public String d_grade;
     public Float d_starscorerb;
-    public String d_starscore;
+    public Float d_starscore;
     public String d_audiencecnt;
     public String d_synopsis;
     public String d_director;
     public String d_actor;
-    //public String d_actor2;
-
-//    public String d_likecnt;
+    public String d_likecnt;
 
     public MovieDetail(String title, String url, String release, String genre, String runtime,
-                       String grade, Float starscorerb, String starscore,
-                       String audiencecnt, String synopsis, String director, String actor) {
+                       String grade, Float starscorerb, Float starscore,
+                       String audiencecnt, String synopsis, String director, String actor, String likecnt) {
         this.d_title = title;
         this.d_img_url = url;
         this.d_release = release;
@@ -32,7 +30,7 @@ public class MovieDetail {
         this.d_synopsis = synopsis;
         this.d_director = director;
         this.d_actor = actor;
-        //this.d_actor2 = actor2;
+        this.d_likecnt = likecnt;
     }
 
     public String getD_title() {
@@ -91,11 +89,11 @@ public class MovieDetail {
         this.d_starscorerb = d_starscorerb;
     }
 
-    public String getD_starscore() {
+    public Float getD_starscore() {
         return d_starscore;
     }
 
-    public void setD_starscore(String d_starscore) {
+    public void setD_starscore(Float d_starscore) {
         this.d_starscore = d_starscore;
     }
 
@@ -131,11 +129,11 @@ public class MovieDetail {
         this.d_actor = d_actor;
     }
 
-//    public String getD_actor2() {
-//        return d_actor2;
-//    }
-//
-//    public void setD_actor2(String d_actor2) {
-//        this.d_actor2 = d_actor2;
-//    }
+    public String getD_likecnt() {
+        return d_likecnt;
+    }
+
+    public void setD_likecnt(String d_likecnt) {
+        this.d_likecnt = d_likecnt;
+    }
 }

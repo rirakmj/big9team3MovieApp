@@ -35,6 +35,7 @@
                     android:id="@+id/tvMovieRelease"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="개봉일"
                     android:textSize="21sp" />
@@ -59,7 +60,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="등급"
-                        android:textSize="17sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tvRuntime"
@@ -67,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="상영시간"
-                        android:textSize="17sp" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -171,17 +172,19 @@
                     android:orientation="horizontal">
 
                     <RatingBar
-                        android:id="@+id/rbSpcscore"
+                        android:id="@+id/rbMyscore"
                         style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:isIndicator="false"
+                        android:max="10"
                         android:numStars="5"
                         android:rating="0"
-                        android:stepSize="0.05" />
+                        android:stepSize="0.01" />
 
                     <TextView
-                        android:id="@+id/tvSpcscore"
+                        android:id="@+id/tvMyscore"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -223,7 +226,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:isIndicator="false"
+                        android:isIndicator="true"
                         android:max="10"
                         android:numStars="5"
                         android:rating="0"
@@ -263,7 +266,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="누적관객수"
-                    android:textSize="15sp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -294,7 +297,7 @@
                 android:layout_margin="10dp"
                 android:singleLine="false"
                 android:text="줄거리"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
         </LinearLayout>
 
@@ -369,7 +372,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:text="감독"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -395,7 +398,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
                     android:text="출연자"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -477,25 +480,29 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:background="@android:color/background_light"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center">
 
             <Button
                 android:id="@+id/btnStarReview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="내 평점 등록" />
+                android:text="내 평점 등록"
+                android:layout_margin="10dp"/>
 
             <Button
                 android:id="@+id/btnReview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="내 리뷰 등록" />
+                android:text="내 리뷰 등록"
+                android:layout_margin="10dp"/>
 
             <Button
                 android:id="@+id/btnBooking"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="예매하기" />
+                android:text="예매하기"
+                android:layout_margin="10dp"/>
         </LinearLayout>
 
     </LinearLayout>
