@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,6 +29,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.w3c.dom.Text;
+
 public class LoginActivity<User> extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth;             // 파이어베이스 인증
@@ -38,6 +41,8 @@ public class LoginActivity<User> extends AppCompatActivity {
     private SignInButton btn_google;                      // 구글 로그인 버튼
     private static int RC_SIGN_IN = 9001;           // 임의로 설정 가능
     private String email, pwd;
+    TextView passwordEmail;
+
 
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -53,6 +58,17 @@ public class LoginActivity<User> extends AppCompatActivity {
         editEmail = findViewById(R.id.et_email);
         editPwd = findViewById(R.id.et_pwd);
         btn_google = (SignInButton) findViewById(R.id.btn_google);
+        btn_google.setSize(SignInButton.SIZE_WIDE);
+
+        passwordEmail = findViewById(R.id.passwordEmail);
+
+        passwordEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, PasswordResetByEmailActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //1. 이메일과 비밀번호를 이용한 로그인 방법
         //로그인 버튼
@@ -91,15 +107,6 @@ public class LoginActivity<User> extends AppCompatActivity {
 
             }
 
-        });
-
-        Button btn_myPage = findViewById(R.id.btn_myPage);
-        btn_myPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, MyPageActivity.class);
-                startActivity(intent);
-            }
         });
 
         //회원가입 버튼

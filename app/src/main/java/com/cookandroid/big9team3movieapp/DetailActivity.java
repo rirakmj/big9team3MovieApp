@@ -19,6 +19,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -40,6 +42,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); //데이터베이스 객체
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +59,14 @@ public class DetailActivity extends AppCompatActivity {
         // 로그인 유무에 따라 버튼 보이기/숨기기
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        btnStarReview = findViewById(R.id.btnStarReview);
+        // btnStarReview = findViewById(R.id.btnStarReview);
         btnReview = findViewById(R.id.btnReview);
         btnBooking = findViewById(R.id.btnBooking);
         rbMyscore = findViewById(R.id.rbMyscore);
         tvMyscore = findViewById(R.id.tvMyscore);
 
         if (user == null) {
-            btnStarReview.setVisibility(View.INVISIBLE);
+            // btnStarReview.setVisibility(View.INVISIBLE);
             btnReview.setVisibility(View.INVISIBLE);
             btnBooking.setVisibility(View.INVISIBLE);
         }
@@ -101,13 +105,13 @@ public class DetailActivity extends AppCompatActivity {
                     String myTitle = elem.select("div.mv_info_area > div.mv_info > h3 > a:nth-child(1)").text(); // 영화 제목
                     String myImgUrl = elem.select("div.mv_info_area > div.poster > a > img").attr("src"); // 포스터 링크
                     String myLikecnt = elem.select("div div div div[class=end_btn_area] ul").select("div[class=u_likeit_module]").next().toString();
-                    Log.d("likecnt", "like: " +myLikecnt);
+                    Log.d("likecnt", "like: " + myLikecnt);
                     // div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(3) > div > a
                     // div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(3) > div > a > em
                     String myRelease = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(4)").text().replace(" ", ""); // 개봉일
-                    String myGenre = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(1)").text().replace(" ", ""); // 영화 장르
-                    String myRuntime = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(3)").text();
-                    String myGrade = elem.select("div div dl dt[class=step4]").next().first().text().replace(" ", "");
+                    String myGenre = "장르: " + elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(1)").text().replace(" ", ""); // 영화 장르
+                    String myRuntime = "상영시간: " + elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(3)").text();
+                    String myGrade = "등급: " + elem.select("div div dl dt[class=step4]").next().first().text().replace(" ", "");
                     Float myStarscorerb = Float.parseFloat(elem.select("div.mv_info_area > div.mv_info > div.main_score > div.score.score_left > div.star_score > a > em").text().replace(" ", ""));
                     Float myStarscore = Float.parseFloat(elem.select("div.mv_info_area > div.mv_info > div.main_score > div.score.score_left > div.star_score > a > em").text().replace(" ", ""));
                     String myAudiencecnt = elem.select("div div dl dt[class=step9]").next().select("p[class=count]").text().replace(" ", "");
@@ -115,16 +119,16 @@ public class DetailActivity extends AppCompatActivity {
                     String myDirector = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(4) > p > a").text();
 
                     mdList.add(new MovieDetail(myTitle, myImgUrl, myRelease, myGenre, myRuntime, myGrade,
-                            myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector, "출연진 없음", myLikecnt));
+                            myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector, "출연진 없음"));
                 } else {
                     String myTitle = elem.select("div.mv_info_area > div.mv_info > h3 > a:nth-child(1)").text(); // 영화 제목
                     String myImgUrl = elem.select("div.mv_info_area > div.poster > a > img").attr("src"); // 포스터 링크
                     String myLikecnt = elem.select("div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(3) > div > a > em").text();
-                    Log.d("likecnt", "like: " +myLikecnt);
+                    Log.d("likecnt", "like: " + myLikecnt);
                     String myRelease = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(4)").text().replace(" ", ""); // 개봉일
-                    String myGenre = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(1)").text().replace(" ", ""); // 영화 장르
-                    String myRuntime = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(3)").text();
-                    String myGrade = elem.select("div div dl dt[class=step4]").next().first().text().replace(" ", "");
+                    String myGenre = "장르: " + elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(1)").text().replace(" ", ""); // 영화 장르
+                    String myRuntime = "상영시간: " + elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(3)").text();
+                    String myGrade = "등급: " + elem.select("div div dl dt[class=step4]").next().first().text().replace(" ", "");
                     Float myStarscorerb = Float.parseFloat(elem.select("div.mv_info_area > div.mv_info > div.main_score > div.score.score_left > div.star_score > a > em").text().replace(" ", ""));
                     Float myStarscore = Float.parseFloat(elem.select("div.mv_info_area > div.mv_info > div.main_score > div.score.score_left > div.star_score > a > em").text().replace(" ", ""));
                     String myAudiencecnt = elem.select("div div dl dt[class=step9]").next().select("p[class=count]").text().replace(" ", "");
@@ -133,7 +137,7 @@ public class DetailActivity extends AppCompatActivity {
                     String myActor = elem.select("div div dl dt[class=step3]").next().first().select("p").text();
 
                     mdList.add(new MovieDetail(myTitle, myImgUrl, myRelease, myGenre, myRuntime, myGrade,
-                            myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector, myActor, myLikecnt));
+                            myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector, myActor));
                 }
 
             } catch (IOException e) {
@@ -159,7 +163,6 @@ public class DetailActivity extends AppCompatActivity {
             tvSynopsis = findViewById(R.id.tvSynopsis);
             tvDirector = findViewById(R.id.tvDirector);
             tvActor = findViewById(R.id.tvActor);
-            tvLikeCount = findViewById(R.id.tvLikeCount);
 
             rbMyscore = findViewById(R.id.rbMyscore);
             rbStarscore = findViewById(R.id.rbStarscore);
@@ -169,12 +172,12 @@ public class DetailActivity extends AppCompatActivity {
 
             ivBigPoster = findViewById(R.id.ivBigPoster);
             GlideApp.with(ivBigPoster).load(mdList.get(0).getD_img_url())
-                    .override(350,550)
+                    .override(350, 550)
                     .into(ivBigPoster);
 
             tvMRelease.setText(mdList.get(0).getD_release());
 
-            if(mdList.get(0).getD_genre() != null) {
+            if (mdList.get(0).getD_genre() != null) {
                 tvMGenre.setText(mdList.get(0).getD_genre());
             } else {
                 tvMGenre.setText(" ");
@@ -184,10 +187,8 @@ public class DetailActivity extends AppCompatActivity {
 
             tvGrade.setText(mdList.get(0).getD_grade());
 
-            tvLikeCount.setText(mdList.get(0).getD_likecnt());
-
-            rbStarscore.setRating(mdList.get(0).getD_starscorerb()/2*100/100.0f);
-            tvStarscore.setText(String.format("%.2f", (mdList.get(0).getD_starscore()/2)));
+            rbStarscore.setRating(mdList.get(0).getD_starscorerb() / 2 * 100 / 100.0f);
+            tvStarscore.setText(String.format("%.2f", (mdList.get(0).getD_starscore() / 2)));
 
             tvAudiencecnt.setText(mdList.get(0).getD_audiencecnt());
 
@@ -206,6 +207,15 @@ public class DetailActivity extends AppCompatActivity {
                 public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                     tvMyscore.setText(rating + "");
 
+                    // 영화 제목, 영화 포스터, 내 평점 등록 액티비티로 넘기기
+                    String mTitle = mdList.get(0).getD_title();
+                    String mImgurl = mdList.get(0).getD_img_url();
+                    String myscore = tvMyscore.getText().toString();
+                    Intent intent = new Intent(DetailActivity.this, ReviewwithstarActivity.class);
+                    intent.putExtra("mTitle", mTitle);
+                    intent.putExtra("mImgurl", mImgurl);
+                    intent.putExtra("myscore", myscore);
+                    startActivity(intent);
                 }
             });
 
@@ -219,17 +229,17 @@ public class DetailActivity extends AppCompatActivity {
             });
 
             //별점리뷰 이벤트처리
-            btnStarReview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String mTitle = mdList.get(0).getD_title();
-                    String mImgurl = mdList.get(0).getD_img_url();
-                    Intent intent = new Intent(getApplicationContext(), ReviewwithstarActivity.class);
-                    intent.putExtra("mTitle", mTitle);
-                    intent.putExtra("mImgurl", mImgurl);
-                    startActivity(intent);
-                }
-            });
+//            btnStarReview.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    String mTitle = mdList.get(0).getD_title();
+//                    String mImgurl = mdList.get(0).getD_img_url();
+//                    Intent intent = new Intent(getApplicationContext(), ReviewwithstarActivity.class);
+//                    intent.putExtra("mTitle", mTitle);
+//                    intent.putExtra("mImgurl", mImgurl);
+//                    startActivity(intent);
+//                }
+//            });
 
             //리뷰 페이지 이벤트 처리
             btnReview.setOnClickListener(new View.OnClickListener() {
@@ -244,7 +254,10 @@ public class DetailActivity extends AppCompatActivity {
                 }
             });
 
+
         }
+
+
 
 
 //            // 줄거리 보기 버튼 이벤트 처리
@@ -260,8 +273,15 @@ public class DetailActivity extends AppCompatActivity {
 //            });
 //
 //
-
-
-        }
     }
+
+//    // 영화 데이터 파이어베이스에 저장
+//    public void updatemovie(String title, String link, String url, String release, String director, String myscore) {
+//        Intent inIntent = getIntent();
+//        String dtitle = inIntent.getStringExtra("dtitle");
+//        if (mdList.get(0).getD_title() == dtitle) {
+//            databaseReference.child("movie").child("myscore").setValue(new Movie(title, link, url, release, director, myscore));
+//        }
+//    }
+}
 

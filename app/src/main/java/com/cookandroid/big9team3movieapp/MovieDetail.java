@@ -13,11 +13,10 @@ public class MovieDetail {
     public String d_synopsis;
     public String d_director;
     public String d_actor;
-    public String d_likecnt;
 
     public MovieDetail(String title, String url, String release, String genre, String runtime,
                        String grade, Float starscorerb, Float starscore,
-                       String audiencecnt, String synopsis, String director, String actor, String likecnt) {
+                       String audiencecnt, String synopsis, String director, String actor) {
         this.d_title = title;
         this.d_img_url = url;
         this.d_release = release;
@@ -30,7 +29,6 @@ public class MovieDetail {
         this.d_synopsis = synopsis;
         this.d_director = director;
         this.d_actor = actor;
-        this.d_likecnt = likecnt;
     }
 
     public String getD_title() {
@@ -129,11 +127,4 @@ public class MovieDetail {
         this.d_actor = d_actor;
     }
 
-    public String getD_likecnt() {
-        return d_likecnt;
-    }
-
-    public void setD_likecnt(String d_likecnt) {
-        this.d_likecnt = d_likecnt;
-    }
 }

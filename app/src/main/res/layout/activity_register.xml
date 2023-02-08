@@ -5,7 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RegisterActivity">
+    tools:context=".RegisterActivity"
+    android:background="@color/white">
+    <ImageButton
+        android:id="@+id/btn_return"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/white"
+        tools:layout_editor_absoluteY="652dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -42,6 +51,8 @@
                 android:id="@+id/btn_nickNameCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
                 android:text="중복확인" />
         </LinearLayout>
 
@@ -74,6 +85,8 @@
                 android:id="@+id/btn_emailCheck"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
                 android:text="중복확인" />
 
         </LinearLayout>
@@ -100,18 +113,15 @@
 
         <Button
             android:id="@+id/btn_register"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="회원 가입"
             app:layout_constraintStart_toStartOf="parent"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/white"
             tools:layout_editor_absoluteY="652dp" />
 
-        <Button
-            android:id="@+id/btn_return"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="돌아가기"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="652dp" />
+
     </LinearLayout>
 </LinearLayout>

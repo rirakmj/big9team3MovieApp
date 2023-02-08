@@ -1,6 +1,5 @@
 package com.cookandroid.big9team3movieapp;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -114,24 +113,35 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_setting:
                         item.setChecked(true);
                         displayMessage("setting");
+                        Intent intent2 = new Intent(getApplicationContext(), PasswordResetActivity.class);
+                        startActivity(intent2);
                         drawerLayout.closeDrawers();
                         return true;
 
                     case R.id.nav_logout:
                         item.setChecked(true);
                         displayMessage("logout");
-                        signOut();
-                        finish();
-                        drawerLayout.closeDrawers();
-                        return true;
+                        if (user != null) {
+                            signOut();
+                            finish();
+                            Intent intent3 = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent3);
+                            drawerLayout.closeDrawers();
+                            return true;
+                        }
 
                     case R.id.nav_delete:
                         item.setChecked(true);
                         displayMessage("remove");
-                        revokeAccess();
-                        finish();
-                        drawerLayout.closeDrawers();
-                        return true;
+                        if (user != null) {
+                            revokeAccess();
+                            signOut();
+                            finish();
+                            Intent intent4 = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent4);
+                            drawerLayout.closeDrawers();
+                            return true;
+                        }
                 }
 
                 return false;
@@ -182,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
+
             try {
                 Document doc = Jsoup.connect("https://movie.naver.com/movie/running/current.naver").get();
                 Elements mElementDataSize = doc.select("ul[class=lst_detail_t1]").select("li");
@@ -222,8 +233,10 @@ public class MainActivity extends AppCompatActivity {
                 public void onItemClick(int pos) {
                     // 선택한 아이템의 detail_link를 넘긴다.
                     String link = mList.get(pos).getDetail_link();
+                    String title = mList.get(pos).getTitle();
                     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                     intent.putExtra("dlink", link);
+                    intent.putExtra("dtitle", title);
                     startActivity(intent);
 
                     // 아이템을 클릭하면 상세보기 대화상자가 뜸
@@ -257,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // 영화 데이터 파이어베이스에 저장
     public void addmovie(String title, String link, String url, String release, String director) {
         Movie movie = new Movie(title, link, url, release, director);
         databaseReference.child("movie").push().setValue(movie);

@@ -49,13 +49,13 @@ public class MyPageActivity extends TabActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
-        //탭에서 액티비티를 사용할 수 있도록 인텐트 생성(Info)
-        intent = new Intent().setClass(this, InformationActivity.class);
-        //객체 생성
-        spec = tabHost.newTabSpec("Info");
-        spec.setIndicator("Info");
-        spec.setContent(intent);
-        tabHost.addTab(spec);
+//        //탭에서 액티비티를 사용할 수 있도록 인텐트 생성(Info)
+//        intent = new Intent().setClass(this, InformationActivity.class);
+//        //객체 생성
+//        spec = tabHost.newTabSpec("Info");
+//        spec.setIndicator("Info");
+//        spec.setContent(intent);
+//        tabHost.addTab(spec);
 
         //탭에서 액티비티를 사용할 수 있도록 인텐트 생성(review)
         intent = new Intent().setClass(this, RegisterActivity.class);

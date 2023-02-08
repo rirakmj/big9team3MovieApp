@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +41,8 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;                                 //파이어베이스 인증
     private DatabaseReference mDatabaseRef;                             //실시간 데이터베이스
     private EditText editEmail, editPwd, editPwdCheck, editNickname, editPhone;  // 회원가입 입력 필드
-    private Button btn_register, btn_return, btn_emailCheck, btn_nickNameCheck;                              // 회원가입 버튼
+    private Button btn_register, btn_emailCheck, btn_nickNameCheck;// 회원가입 버튼
+    private ImageButton btn_return;
     String email, pwd, pwdCheck, nickname, phone;
 
 

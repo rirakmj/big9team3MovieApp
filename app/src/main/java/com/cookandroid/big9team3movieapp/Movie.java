@@ -58,6 +58,7 @@ public class Movie implements Serializable {
     public void setDirector(String director) {
         this.director = director;
     }
+
 }
 
 
