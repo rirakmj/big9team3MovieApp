@@ -5,13 +5,15 @@ import java.util.List;
 
 public class Movie implements Serializable {
 
+    private String key;
     private String title;
     private String detail_link;
     private String img_url;
     private String release;
     private String director;
 
-    public Movie(String title, String link, String url, String release, String director) {
+    public Movie(String key, String title, String link, String url, String release, String director) {
+        this.key = key;
         this.title = title;
         this.detail_link = link;
         this.img_url = url;
@@ -21,6 +23,14 @@ public class Movie implements Serializable {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public void setTitle(String title) {

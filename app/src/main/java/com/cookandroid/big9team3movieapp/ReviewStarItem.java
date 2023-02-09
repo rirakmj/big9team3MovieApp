@@ -1,30 +1,32 @@
 package com.cookandroid.big9team3movieapp;
 
 public class ReviewStarItem {
-    String myscore;
-    String myshortreview;
+    String score;
+    String shortreview;
     String writer;
+    String title;
 
-    public ReviewStarItem(String myscore, String myshortreview, String writer) {
-        this.myscore = myscore;
-        this.myshortreview = myshortreview;
+    public ReviewStarItem(String score, String shortreview, String writer, String title) {
+        this.score = score;
+        this.shortreview = shortreview;
         this.writer = writer;
+        this.title = title;
     }
 
-    public String getMyscore() {
-        return myscore;
+    public String getScore() {
+        return score;
     }
 
-    public void setMyscore(String myscore) {
-        this.myscore = myscore;
+    public void setScore(String score) {
+        this.score = score;
     }
 
-    public String getMyshortreview() {
-        return myshortreview;
+    public String getShortreview() {
+        return shortreview;
     }
 
-    public void setMyshortreview(String myshortreview) {
-        this.myshortreview = myshortreview;
+    public void setShortreview(String shortreview) {
+        this.shortreview = shortreview;
     }
 
     public String getWriter() {
@@ -33,5 +35,13 @@ public class ReviewStarItem {
 
     public void setWriter(String writer) {
         this.writer = writer;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

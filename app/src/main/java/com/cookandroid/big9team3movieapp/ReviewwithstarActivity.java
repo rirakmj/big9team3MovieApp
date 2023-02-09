@@ -34,13 +34,10 @@ public class ReviewwithstarActivity extends AppCompatActivity {
     EditText etShortreview;
     Button saveButton, cancelButton;
 
-    DatabaseReference databaseReference;
-
-    ArrayList<UserAccount> userAccountArrayList;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mReference = mDatabase.getReference();
-    private List<String> KeyList = new ArrayList<>();
+    private ArrayList<ReviewStarItem> starReview;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -69,7 +66,6 @@ public class ReviewwithstarActivity extends AppCompatActivity {
                 .override(250, 450)
                 .into(ivRSM);
         tvRSM.setText(mTitle);
-
 
         // 상세보기 화면에서 넣은 별점 가져오기
         if (myscore != null) {
@@ -104,27 +100,18 @@ public class ReviewwithstarActivity extends AppCompatActivity {
                     }
                 });
 
-//        mReference.child("movie").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                Movie movie = snapshot.getValue(Movie.class);
-//                String key = snapshot.getKey();
-//                String movietitle = snapshot.
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        })
-
-        // 영화 제목이 DB의 영화 제목과 일치하면
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String mTitle2 = tvRSM.getText().toString();
-                mReference.child("movie").child("title").equalTo(mTitle2).toString();
-                Log.d("mTitleDb", "mTitleDb: " +mReference.child("movie").child("title").equalTo(mTitle2));
+                String score = tvMyscore.getText().toString();
+                String shortreview = etShortreview.getText().toString();
+                String writer = tvWriter.getText().toString();
+                String title = tvRSM.getText().toString();
+                ReviewStarItem starReview = new ReviewStarItem(score, shortreview, writer, title);
+                mReference.child("starreview").push().setValue(starReview);
+
+                // 양방향 액티비티로 별점 넘겨주기
+
 //                if (mTitleDb.equals(mTitle2)) {
 //                    String myscore = tvMyscore.getText().toString();
 //                    String myshortreview = etShortreview.getText().toString();
@@ -137,6 +124,14 @@ public class ReviewwithstarActivity extends AppCompatActivity {
 //                    Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
 //                    startActivity(intent2);
 //                }
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+
             }
         });
     }

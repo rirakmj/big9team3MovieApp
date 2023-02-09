@@ -230,6 +230,8 @@ public class MainActivity extends AppCompatActivity {
                 int mElementSize = mElementDataSize.size();
 
                 for (Element elem : mElementDataSize) {
+                    String myKey = elem.select("li div[class=thumb] a").attr("href").substring(30);
+                    //Log.d("key", "key: " + myKey);
                     String myTitle = elem.select("li dt[class=tit] a").text(); // 제목
                     String myLink = elem.select("li div[class=thumb] a").attr("href"); // 상세 정보 링크
                     String myImgUrl = elem.select("li div[class=thumb] a img").attr("src"); // 포스터
@@ -238,64 +240,46 @@ public class MainActivity extends AppCompatActivity {
                     Element dElem = elem.select("dl[class=info_txt1] dt").select("dt[class=tit_t2]").next().first();
                     String myDirector = "감독: " + dElem.select("a").text();
 
-                    mList.add(new Movie(myTitle, myLink, myImgUrl, myRelease, myDirector));
-                    addmovie(myTitle, myLink, myImgUrl, myRelease, myDirector);
+                    mList.add(new Movie(myKey, myTitle, myLink, myImgUrl, myRelease, myDirector));
+                    // addmovie(myKey, myTitle, myLink, myImgUrl, myRelease, myDirector);
                 }
                 //Log.d("debug: ", "mList " + mElementDataSize);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            // 어댑터와 연결
-            MovieAdapter movieAdapter = new MovieAdapter(mList);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(movieAdapter);
-
-            progressDialog.dismiss();
-
-            // 상세보기 액티비티 띄우기
-            movieAdapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(int pos) {
-                    databaseReference.child("movie").addValueEventListener(new ValueEventListener() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            keyList.clear();
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                String key = dataSnapshot.getKey();
-                                keyList.add(key);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                    // 선택한 아이템의 detail_link를 넘긴다.
-                    String link = mList.get(pos).getDetail_link();
-                    String title = mList.get(pos).getTitle();
-                    String mykey = keyList.get(pos);
-                    Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                    intent.putExtra("dlink", link);
-                    intent.putExtra("dtitle", title);
-                    intent.putExtra("mykey", mykey);
-                    startActivity(intent);
-
+                } catch(IOException e){
+                    e.printStackTrace();
                 }
+                return null;
+            }
 
+            @Override
+            protected void onPostExecute (Void result){
 
-            });
+                // 어댑터와 연결
+                MovieAdapter movieAdapter = new MovieAdapter(mList, keyList);
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(movieAdapter);
+
+                progressDialog.dismiss();
+
+                // 상세보기 액티비티 띄우기
+                movieAdapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int pos) {
+
+                        // 선택한 아이템의 detail_link를 넘긴다.
+                        String link = mList.get(pos).getDetail_link();
+                        String title = mList.get(pos).getTitle();
+                        String key = mList.get(pos).getKey();
+                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                        intent.putExtra("dlink", link);
+                        intent.putExtra("dtitle", title);
+                        intent.putExtra("dkey", key);
+                        startActivity(intent);
+
+                    }
+                });
+            }
         }
-    }
-
 
         // 아이템을 클릭하면 상세보기 대화상자가 뜸
 //                    View dialogview = View.inflate(MainActivity.this, R.layout.dialog_detail, null);
@@ -326,10 +310,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         // 영화 데이터 파이어베이스에 저장
-        public void addmovie(String title, String link, String url, String release, String director) {
-            Movie movie = new Movie(title, link, url, release, director);
-            databaseReference.child("movie").push().setValue(movie);
-        }
+//        public void addmovie(String key, String title, String link, String url, String release, String director) {
+//            Movie movie = new Movie(key, title, link, url, release, director);
+//            databaseReference.child("movie").push().setValue(movie);
+//        }
+
+//    private void readData() {
+//        databaseReference.child("movie").addValueEventListener(new ValueEventListener() {
+//            @SuppressLint("NotifyDataSetChanged")
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                keyList.clear();
+//                String key = snapshot.getKey();
+//                keyList.add(key);
+//                Log.d("key", "key: " + key);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
 //    private void displayMessage(String message) {
 //        Toast.makeText(this, "message", Toast.LENGTH_SHORT).show();

@@ -39,7 +39,7 @@ public class DetailActivity extends AppCompatActivity {
     ImageView ivBigPoster;
     RatingBar rbMyscore, rbStarscore;
 
-    Button btnlike, btnStarReview, btnReview, btnBooking;
+    Button btnReview, btnBooking;
 
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
@@ -93,8 +93,7 @@ public class DetailActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             Intent inIntent = getIntent();
             String dlink = inIntent.getStringExtra("dlink");
-            String mykey = inIntent.getStringExtra("mykey");
-            Log.d("mykey", "mykey: " +mykey);
+            String dkey = inIntent.getStringExtra("dkey");
 
             try {
                 Document doc = Jsoup.connect("https://movie.naver.com/" + dlink).get();
@@ -206,15 +205,19 @@ public class DetailActivity extends AppCompatActivity {
                     tvMyscore.setText(rating + "");
 
                     // 영화 제목, 영화 포스터, 내 평점 등록 액티비티로 넘기기
+                    Intent inIntent = getIntent();
+                    String dkey = inIntent.getStringExtra("dkey");
                     String mTitle = mdList.get(0).getD_title();
                     String mImgurl = mdList.get(0).getD_img_url();
                     String myscore = tvMyscore.getText().toString();
                     String myuid = mFirebaseAuth.getUid();
+
                     Intent intent = new Intent(DetailActivity.this, ReviewwithstarActivity.class);
                     intent.putExtra("mTitle", mTitle);
                     intent.putExtra("mImgurl", mImgurl);
                     intent.putExtra("myscore", myscore);
                     intent.putExtra("myuid", myuid);
+                    intent.putExtra("myKey", dkey);
                     Log.d("uid", "uid: " + myuid);
                     startActivity(intent);
                 }
@@ -227,8 +230,9 @@ public class DetailActivity extends AppCompatActivity {
 //                    Intent intent = new Intent(getApplicationContext(), BookingActivity.class);
 //                    startActivity(intent);
 //                }
-                    Log.d("link:", mdList.get(0).getD_booking() + "");
-                    Uri uri = Uri.parse("https://movie.naver.com" + mdList.get(0).getD_booking() + "");
+                    Intent inIntent = getIntent();
+                    String dlink = inIntent.getStringExtra("dlink");
+                    Uri uri = Uri.parse("https://movie.naver.com" + dlink);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                 }

@@ -83,7 +83,7 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
         mFirebaseAuth = FirebaseAuth.getInstance();
         String uid = mFirebaseAuth.getUid();
         // String uid = mUser.getUid();
-        //   String str =  databaseReference.child("loginApp").child("REVIEW").;
+        // String str =  databaseReference.child("loginApp").child("REVIEW").;
         // Log.d("str","str"+str);
         mReference.child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
             @Override
