@@ -8,6 +8,8 @@ public class ReviewItem {
     String content;
     String regdate;
 
+    String flag="0";
+
     public ReviewItem(){}
 
     public ReviewItem( String writer, String content, String regdate) {
@@ -50,5 +52,11 @@ public class ReviewItem {
         this.regdate = regdate;
     }
 
+    public String getFlag() {
+        return flag;
+    }
 
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
 }

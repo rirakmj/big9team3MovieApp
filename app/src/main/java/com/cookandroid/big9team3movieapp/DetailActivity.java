@@ -104,10 +104,6 @@ public class DetailActivity extends AppCompatActivity {
 //                for (Element elem : mElementDataSize) {
                     String myTitle = elem.select("div.mv_info_area > div.mv_info > h3 > a:nth-child(1)").text(); // 영화 제목
                     String myImgUrl = elem.select("div.mv_info_area > div.poster > a > img").attr("src"); // 포스터 링크
-                    String myLikecnt = elem.select("div div div div[class=end_btn_area] ul").select("div[class=u_likeit_module]").next().toString();
-                    Log.d("likecnt", "like: " + myLikecnt);
-                    // div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(3) > div > a
-                    // div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(3) > div > a > em
                     String myRelease = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(4)").text().replace(" ", ""); // 개봉일
                     String myGenre = "장르: " + elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(1)").text().replace(" ", ""); // 영화 장르
                     String myRuntime = "상영시간: " + elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(3)").text();
@@ -123,8 +119,6 @@ public class DetailActivity extends AppCompatActivity {
                 } else {
                     String myTitle = elem.select("div.mv_info_area > div.mv_info > h3 > a:nth-child(1)").text(); // 영화 제목
                     String myImgUrl = elem.select("div.mv_info_area > div.poster > a > img").attr("src"); // 포스터 링크
-                    String myLikecnt = elem.select("div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(3) > div > a > em").text();
-                    Log.d("likecnt", "like: " + myLikecnt);
                     String myRelease = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(4)").text().replace(" ", ""); // 개봉일
                     String myGenre = "장르: " + elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(1)").text().replace(" ", ""); // 영화 장르
                     String myRuntime = "상영시간: " + elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(2) > p > span:nth-child(3)").text();
@@ -211,10 +205,13 @@ public class DetailActivity extends AppCompatActivity {
                     String mTitle = mdList.get(0).getD_title();
                     String mImgurl = mdList.get(0).getD_img_url();
                     String myscore = tvMyscore.getText().toString();
+                    String myuid = mFirebaseAuth.getUid();
                     Intent intent = new Intent(DetailActivity.this, ReviewwithstarActivity.class);
                     intent.putExtra("mTitle", mTitle);
                     intent.putExtra("mImgurl", mImgurl);
                     intent.putExtra("myscore", myscore);
+                    intent.putExtra("myuid", myuid);
+                    Log.d("uid", "uid: "+myuid);
                     startActivity(intent);
                 }
             });

@@ -22,14 +22,16 @@
             android:layout_alignParentTop="true"
             android:layout_margin="10dp"
             android:text="최신 상영작"
-            android:textSize="40dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:textSize="40dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/btnLoginPage"
+
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"

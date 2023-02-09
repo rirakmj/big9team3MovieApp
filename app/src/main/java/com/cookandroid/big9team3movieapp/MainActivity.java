@@ -1,7 +1,9 @@
 package com.cookandroid.big9team3movieapp;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,14 +53,15 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;          //숨겨진 네비게이션 뷰
     private DrawerLayout drawerLayout;              //숨겨진 뷰를 여는 레이아웃
 
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); //데이터베이스 객체
-    private DatabaseReference databaseReference = firebaseDatabase.getReference();
-
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseDatabase firebaseDatabase; //데이터베이스 객체
+    private DatabaseReference databaseReference;
+    FirebaseUser user; // 현재 유저 (DB에 들어있는 모든 회원..?)
 
     private RecyclerView recyclerView;
     private ArrayList<Movie> mList = new ArrayList<>();
     TextView info; //사용자 아이디
+    TextView tvWelcome;
+    private android.content.SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +89,46 @@ public class MainActivity extends AppCompatActivity {
         //파이어베이스 인증객체 생성
         mFirebaseAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d("currentuser", "user: " + user);
+
+        preferences = getSharedPreferences("UserAccount", MODE_PRIVATE);
+        if (user != null) {
+            databaseReference.child("loginapp").child("UserAccount").child(user.getUid());
+            //userid를 가져옴
+            String uid = mFirebaseAuth.getUid();
+            databaseReference.getRef().child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    UserAccount user = snapshot.getValue(UserAccount.class);
+                    String name = user.getName();
+                    info = findViewById(R.id.Name);
+                    //님 환영합니다 뷰 수정
+                    info.setText(name);
+                    info.setTextSize(30);
+                    tvWelcome = findViewById(R.id.tvWelcome);
+                    tvWelcome.setVisibility(View.VISIBLE);
+                    //Editor를 preferences에 쓰겠다고 연결
+                    SharedPreferences.Editor editor = preferences.edit();
+                    //putString(KEY,VALUE)
+                    editor.putString("nickname", name);
+                    //항상 commit & apply 를 해주어야 저장이 된다.
+                    editor.commit();
+                    //메소드 호출
+                    getPreferences();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+
+        } else {
+            info = findViewById(R.id.Name);
+        }
+
 
         //네비게이션 뷰에서 아이템 선택 시 해당 페이지로 이동 또는 주어진 역할 수행
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -106,13 +149,12 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_booking:
                         item.setChecked(true);
-                        displayMessage("slideshow");
-                        drawerLayout.closeDrawers();
+                        // displayMessage("slideshow");
                         return true;
 
                     case R.id.nav_setting:
                         item.setChecked(true);
-                        displayMessage("setting");
+                        // displayMessage("setting");
                         Intent intent2 = new Intent(getApplicationContext(), PasswordResetActivity.class);
                         startActivity(intent2);
                         drawerLayout.closeDrawers();
@@ -120,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_logout:
                         item.setChecked(true);
-                        displayMessage("logout");
+                        // displayMessage("logout");
                         if (user != null) {
                             signOut();
                             finish();
@@ -132,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_delete:
                         item.setChecked(true);
-                        displayMessage("remove");
+                        // displayMessage("remove");
                         if (user != null) {
                             revokeAccess();
                             signOut();
@@ -143,35 +185,20 @@ public class MainActivity extends AppCompatActivity {
                             return true;
                         }
                 }
-
                 return false;
             }
         });
-
-        if (user != null) {
-            //userid를 가져옴
-            String uid = mFirebaseAuth.getUid();
-            databaseReference.getRef().child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    UserAccount user = snapshot.getValue(UserAccount.class);
-                    String name = user.getName();
-                    info = findViewById(R.id.Name);
-                    info.setText(name + "님 환영합니다");
-                    info.setTextSize(30);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
-
-        }
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewMain);
 
         // AsyncTask 작동
         new Description().execute();
+
+    }
+
+    private void getPreferences() {
+        //getString(KEY,KEY값이 없을때 대체)
+        info.setText("" + preferences.getString("nickname", ""));
     }
 
     private class Description extends AsyncTask<Void, Void, Void> {
@@ -276,9 +303,9 @@ public class MainActivity extends AppCompatActivity {
         databaseReference.child("movie").push().setValue(movie);
     }
 
-    private void displayMessage(String message) {
-        Toast.makeText(this, "message", Toast.LENGTH_SHORT).show();
-    }
+//    private void displayMessage(String message) {
+//        Toast.makeText(this, "message", Toast.LENGTH_SHORT).show();
+//    }
 
     //메뉴 선택시 네비게이션 호출
     @Override
@@ -335,6 +362,7 @@ public class MainActivity extends AppCompatActivity {
     private void revokeAccess() {
         mFirebaseAuth.getCurrentUser().delete();
     }
+
 }
 
 

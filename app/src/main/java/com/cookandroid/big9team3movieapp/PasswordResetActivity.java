@@ -1,4 +1,5 @@
 package com.cookandroid.big9team3movieapp;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -41,7 +42,7 @@ public class PasswordResetActivity<User> extends AppCompatActivity {
         findViewById(R.id.btn_passwordCheck).setOnClickListener(onClickListener);
 
 
-       // EditText들을 string으로
+        // EditText들을 string으로
         currentPwd = ((EditText) findViewById(R.id.current_pwd)).getText().toString();
         newPassword = ((EditText) findViewById(R.id.new_pwd)).getText().toString();
         newPwdCheck = ((EditText) findViewById(R.id.new_pwd_check)).getText().toString();
@@ -58,37 +59,39 @@ public class PasswordResetActivity<User> extends AppCompatActivity {
                 update();
                 break;
 
-                }
+        }
     };
 
     private void check() {
         currentPwd = currentPassword.getText().toString();
-            if(user!= null){
-                String uid = mFirebaseAuth.getUid();
-                databaseReference.getRef().child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        UserAccount user = snapshot.getValue(UserAccount.class);
-                        String password = user.getPassword();
-                        if (password.equals(currentPwd)) {
-                            Toast.makeText(PasswordResetActivity.this, "현재 비밀번호가 일치합니다.", Toast.LENGTH_SHORT).show();
-                            findViewById(R.id.btn_passwordCheck).setVisibility(View.INVISIBLE);
+        if (user != null) {
+            String uid = mFirebaseAuth.getUid();
+            databaseReference.getRef().child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    UserAccount user = snapshot.getValue(UserAccount.class);
+                    String password = user.getPassword();
+                    if (password.equals(currentPwd)) {
+                        Toast.makeText(PasswordResetActivity.this, "현재 비밀번호가 일치합니다.", Toast.LENGTH_SHORT).show();
+                        findViewById(R.id.btn_passwordCheck).setClickable(false);
+                        currentPassword.setEnabled(false);
+                        newPwd.requestFocus();
+                    } else {
+                        Toast.makeText(PasswordResetActivity.this, "현재 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                        currentPassword.setText("");
+                        currentPassword.requestFocus();
+                        findViewById(R.id.btn_passwordCheck).setClickable(true);
 
-                            newPwd.requestFocus();
-                        } else {
-                            Toast.makeText(PasswordResetActivity.this, "현재 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
-                            currentPassword.setText("");
-                            currentPassword.requestFocus();
-                            findViewById(R.id.btn_passwordCheck).setVisibility(View.VISIBLE);
+                    }
+                }
 
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
-                });
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
         }
+    }
+
     private void update() {
         currentPwd = ((EditText) findViewById(R.id.current_pwd)).getText().toString();
         newPassword = ((EditText) findViewById(R.id.new_pwd)).getText().toString();
@@ -97,12 +100,12 @@ public class PasswordResetActivity<User> extends AppCompatActivity {
         if (currentPwd.length() == 0) {
             Toast.makeText(PasswordResetActivity.this, "현재 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
             currentPassword.requestFocus();
-            return ;
+            return;
         }
 
-        if(findViewById(R.id.btn_passwordCheck).getVisibility()==View.VISIBLE){
+        if (findViewById(R.id.btn_passwordCheck).getVisibility() == View.VISIBLE) {
             Toast.makeText(PasswordResetActivity.this, "중복확인 버튼을 눌러주세요.", Toast.LENGTH_SHORT).show();
-           return;
+            return;
 
         }
 
@@ -111,10 +114,12 @@ public class PasswordResetActivity<User> extends AppCompatActivity {
             newPwd.requestFocus();
             return;
         }
+
         if (newPwdCheck.length() == 0) {
             Toast.makeText(PasswordResetActivity.this, "확인 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
             newPasswordCheck.requestFocus();
-            return;}
+            return;
+        }
 
 
         //editText에 작성한 비밀번호들
@@ -126,22 +131,27 @@ public class PasswordResetActivity<User> extends AppCompatActivity {
         }
         if (newPassword.equals(newPwdCheck)) {
             newPassword = ((EditText) findViewById(R.id.new_pwd)).getText().toString();
+
             user.updatePassword(newPassword)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 Toast.makeText(PasswordResetActivity.this, "비밀번호가 변경되었습니다.", Toast.LENGTH_SHORT).show();
-//
+                                signOut();
+                                Intent intent = new Intent(PasswordResetActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         }
                     });
+
         }
 
-        Intent intent = new Intent(PasswordResetActivity.this, MainActivity.class);
-        startActivity(intent);
+    }
 
-
+    private void signOut() {
+        mFirebaseAuth.getInstance().signOut();
     }
 }
 

@@ -1,9 +1,12 @@
 package com.cookandroid.big9team3movieapp;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +20,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAdapter.ViewHolder> {
-
     Context context;
     ArrayList<ReviewItem> reviewItemArrayList;
     DatabaseReference databaseReference;
@@ -35,7 +40,8 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mReference = mDatabase.getReference();
     private FirebaseAuth mFirebaseAuth;
-
+    ReviewItem reviewItem ;
+    private SharedPreferences preferences;
     private String getTime() {
         mNow = System.currentTimeMillis();
         regdate = new Date(mNow);
@@ -46,8 +52,8 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
         this.context = context;
         this.reviewItemArrayList = reviewItemArrayList;
         databaseReference = FirebaseDatabase.getInstance().getReference();
-    }
 
+    }
 
     @NonNull
     @Override
@@ -60,14 +66,66 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         ReviewItem reviewItem = reviewItemArrayList.get(position);
-
         holder.tvwriter.setText("작성자 : " + reviewItem.getWriter());
         holder.tvcontent.setText("" + reviewItem.getContent());
         holder.tvregdate.setText("등록일 : " + reviewItem.getRegdate());
 
-        ////작성자 아니면 버튼 안뜨게 하기
+        //작성자 아니면 버튼 안뜨게 하기
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        String uid = mFirebaseAuth.getUid();
+        // String uid = mUser.getUid();
+        mReference.child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserAccount user = snapshot.getValue(UserAccount.class);
+                String userkey = user.getName();
+                //   Log.d("key", "userkey:" + userkey);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        databaseReference.child("loginApp").child("REVIEW").orderByChild("writer").addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //   Log.d("key111", "writerkey:");
+                reviewItemArrayList.clear();
+                for(DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                    ReviewItem reviewWriter = dataSnapshot1.getValue(ReviewItem.class);
+                    //  Log.d("key222", "writerkey:" + reviewWriter.getWriter());
+                    reviewItemArrayList.add(reviewWriter);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        if ( reviewItem.getFlag().equals("1")
+            //userkey.equals(writerkey)
+            // mDatabase.getReference().child("loginApp").child("UserAccount").child(uid).orderByChild("name")==(mDatabase.getReference().child("loginApp").child("REVIEW").orderByChild("writer"))
+        ) {
+            holder.buttonUpdate.setVisibility(View.VISIBLE);
+            holder.buttonDelete.setVisibility(View.VISIBLE);
+            //Log.d("visible", "UserAccount: " + userkey);
+            // Log.d("visible", "writer: " + writerkey);
+        } else {
+            holder.buttonUpdate.setVisibility(View.INVISIBLE);
+            holder.buttonDelete.setVisibility(View.INVISIBLE);
+            // Log.d("invisible", "UserAccount: " + userkey);
+            // Log.d("invisible", "writer: " + writerkey);
+        }
+
         holder.buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,8 +203,6 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
 
                 @Override
                 public void onClick(View view) {
-                    mFirebaseAuth = FirebaseAuth.getInstance();
-                    String uid = mFirebaseAuth.getUid();
                     String Writer = tvwriter.getText().toString();
                     String Content = tvcontent.getText().toString();
                     String Regdate = getTime() + "";
@@ -158,12 +214,10 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
                         if (Writer.equals(writer) && Content.equals(content) && Regdate.equals(regdate)) {
                             Toast.makeText(context, "you don't change anything", Toast.LENGTH_SHORT).show();
                         } else {
-                            databaseReference.child("loginApp").child("REVIEW").child(uid).setValue(new ReviewItem(Writer, Content, Regdate));
+                            databaseReference.child("loginApp").child("REVIEW").child(writer).setValue(new ReviewItem(Writer, Content, Regdate));
                             Toast.makeText(context, "Review Updated successfully!", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
-
-
                     }
                 }
             });
@@ -173,7 +227,6 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
 
         }
     }
-
 
     public class ViewDialogConfirmDelete {
         public void showDialog(Context context, String writer) {
@@ -195,12 +248,10 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
             buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mFirebaseAuth = FirebaseAuth.getInstance();
-                    String uid = mFirebaseAuth.getUid();
-                    databaseReference.child("loginApp").child("REVIEW").child(uid).removeValue();
+                    databaseReference.child("loginApp").child("REVIEW").child(writer).removeValue();
                     Toast.makeText(context, "Deleted successfully!", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
-
+                    Log.d("writer","writer"+writer);
                 }
             });
 
@@ -208,5 +259,6 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
             dialog.show();
 
         }
+
     }
 }

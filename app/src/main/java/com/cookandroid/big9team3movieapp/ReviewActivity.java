@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,7 +47,6 @@ public class ReviewActivity extends AppCompatActivity {
 
     DatabaseReference databaseReference;
 
-    ArrayList<UserAccount> userAccountArrayList;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mReference = mDatabase.getReference();
@@ -54,6 +55,9 @@ public class ReviewActivity extends AppCompatActivity {
     Date regdate;
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    Gson gson;
+    String name;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,10 +95,16 @@ public class ReviewActivity extends AppCompatActivity {
                 viewDialogAdd.showDialog(ReviewActivity.this);
             }
         });
-        readData();
-    }
 
-    private String getTime() {
+        readData();
+
+        //getSharedPreferences("파일이름",'모드')
+        //모드 => 0 (읽기,쓰기가능)
+        //모드 => MODE_PRIVATE (이 앱에서만 사용가능)
+        preferences = getSharedPreferences("UserAccount", MODE_PRIVATE);
+    }//onCreate
+
+    private String getTime(){
         mNow = System.currentTimeMillis();
         regdate = new Date(mNow);
         return mFormat.format(regdate);
@@ -102,24 +112,46 @@ public class ReviewActivity extends AppCompatActivity {
 
     private void readData() {
         String uid = mFirebaseAuth.getUid();
+
+        databaseReference.getRef().child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserAccount user = snapshot.getValue(UserAccount.class);
+                String name = user.getName();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
         databaseReference.child("loginApp").child("REVIEW").addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 reviewItemArrayList.clear();
+
+                String nickname = "";
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     ReviewItem review = dataSnapshot.getValue(ReviewItem.class);
+                    UserAccount user = new UserAccount();
+                    if(review.getWriter().equals(preferences.getString("nickname",""))){
+                        review.setFlag("1");
+                    }
                     reviewItemArrayList.add(review);
+
                 }
+
                 adapter = new ReviewRecyclerAdapter(ReviewActivity.this, reviewItemArrayList);
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-            }
 
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         });
 
     }
@@ -143,13 +175,11 @@ public class ReviewActivity extends AppCompatActivity {
             mDatabase.getReference().child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    // TextView textwriter = findViewById(R.id.textwriter);
                     UserAccount user = snapshot.getValue(UserAccount.class);
                     String writer = user.getName();
                     textwriter.setText(writer);
-                    Log.d("info", "토큰: " + uid);
+                    // Log.d("info","토큰: "+uid);
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
@@ -168,17 +198,17 @@ public class ReviewActivity extends AppCompatActivity {
 
                     String writer = textwriter.getText().toString();
                     String content = textcontent.getText().toString();
-                    String regdate = getTime() + "";
-
+                    String regdate = getTime()+"";
 
                     if (content.isEmpty()) {
                         Toast.makeText(context, "내용을 입력하세요", Toast.LENGTH_SHORT).show();
                     } else {
-                        databaseReference.child("loginApp").child("REVIEW").push().setValue(new ReviewItem(writer, content, regdate));
+                        databaseReference.child("loginApp").child("REVIEW").push().setValue(new ReviewItem(writer,content,regdate));
                         Toast.makeText(context, "리뷰 작성 완료", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 }
+
             });
 
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
