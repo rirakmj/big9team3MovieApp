@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -113,9 +114,9 @@ public class DetailActivity extends AppCompatActivity {
                     String myAudiencecnt = elem.select("div div dl dt[class=step9]").next().select("p[class=count]").text().replace(" ", "");
                     String mySynopsis = elem.select("div.section_group.section_group_frst > div:nth-child(1) > div > div > p").text();
                     String myDirector = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(4) > p > a").text();
-
+                    String myBooking = elem.select("div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(1) > a").attr("href");
                     mdList.add(new MovieDetail(myTitle, myImgUrl, myRelease, myGenre, myRuntime, myGrade,
-                            myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector, "출연진 없음"));
+                            myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector, "출연진 없음", myBooking));
                 } else {
                     String myTitle = elem.select("div.mv_info_area > div.mv_info > h3 > a:nth-child(1)").text(); // 영화 제목
                     String myImgUrl = elem.select("div.mv_info_area > div.poster > a > img").attr("src"); // 포스터 링크
@@ -129,9 +130,10 @@ public class DetailActivity extends AppCompatActivity {
                     String mySynopsis = elem.select("div.section_group.section_group_frst > div:nth-child(1) > div > div > p").text();
                     String myDirector = elem.select("div.mv_info_area > div.mv_info > dl > dd:nth-child(4) > p > a").text();
                     String myActor = elem.select("div div dl dt[class=step3]").next().first().select("p").text();
+                    String myBooking = elem.select("div.mv_info_area > div.mv_info > div.btn_sns > div.end_btn_area > ul > li:nth-child(1) > a").attr("href");
 
                     mdList.add(new MovieDetail(myTitle, myImgUrl, myRelease, myGenre, myRuntime, myGrade,
-                            myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector, myActor));
+                            myStarscorerb, myStarscore, myAudiencecnt, mySynopsis, myDirector, myActor, myBooking));
                 }
 
             } catch (IOException e) {
@@ -211,7 +213,7 @@ public class DetailActivity extends AppCompatActivity {
                     intent.putExtra("mImgurl", mImgurl);
                     intent.putExtra("myscore", myscore);
                     intent.putExtra("myuid", myuid);
-                    Log.d("uid", "uid: "+myuid);
+                    Log.d("uid", "uid: " + myuid);
                     startActivity(intent);
                 }
             });
@@ -220,7 +222,12 @@ public class DetailActivity extends AppCompatActivity {
             btnBooking.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), BookingActivity.class);
+//                    Intent intent = new Intent(getApplicationContext(), BookingActivity.class);
+//                    startActivity(intent);
+//                }
+                    Log.d("link:", mdList.get(0).getD_booking() + "");
+                    Uri uri = Uri.parse("https://movie.naver.com" + mdList.get(0).getD_booking() + "");
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                 }
             });
@@ -253,8 +260,6 @@ public class DetailActivity extends AppCompatActivity {
 
 
         }
-
-
 
 
 //            // 줄거리 보기 버튼 이벤트 처리

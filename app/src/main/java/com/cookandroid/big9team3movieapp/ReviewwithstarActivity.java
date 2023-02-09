@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ReviewwithstarActivity extends AppCompatActivity {
     ImageView ivRSM;
@@ -39,6 +40,7 @@ public class ReviewwithstarActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mReference = mDatabase.getReference();
+    private List<String> KeyList = new ArrayList<>();
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -102,25 +104,39 @@ public class ReviewwithstarActivity extends AppCompatActivity {
                     }
                 });
 
+////        mReference.child("movie").addValueEventListener(new ValueEventListener() {
+////            @Override
+////            public void onDataChange(@NonNull DataSnapshot snapshot) {
+////                Movie movie = snapshot.getValue(Movie.class);
+////                String key = snapshot.getKey();
+////                String movietitle = snapshot.
+////            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        })
+
         // 영화 제목이 DB의 영화 제목과 일치하면
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String mTitle2 = tvRSM.getText().toString();
-                String mTitleDb = String.valueOf(mReference.child("movie").child("title").equalTo(mTitle2));
-                Log.d("mTitleDb", "mTitleDb: " +mTitleDb);
-                if (mTitleDb.equals(mTitle2)) {
-                    String myscore = tvMyscore.getText().toString();
-                    String myshortreview = etShortreview.getText().toString();
-                    String writer = tvWriter.getText().toString();
-
-                    databaseReference.child("movie").child("title").push().setValue(new ReviewStarItem(myscore, myshortreview, writer));
-                    Toast.makeText(getApplicationContext(), "평점 등록 완료", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "로그인 해 주세요.", Toast.LENGTH_SHORT).show();
-                    Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent2);
-                }
+                mReference.child("movie").child("title").equalTo(mTitle2).toString();
+                Log.d("mTitleDb", "mTitleDb: " +mReference.child("movie").child("title").equalTo(mTitle2));
+//                if (mTitleDb.equals(mTitle2)) {
+//                    String myscore = tvMyscore.getText().toString();
+//                    String myshortreview = etShortreview.getText().toString();
+//                    String writer = tvWriter.getText().toString();
+//
+//                    databaseReference.child("movie").child("title").push().setValue(new ReviewStarItem(myscore, myshortreview, writer));
+//                    Toast.makeText(getApplicationContext(), "평점 등록 완료", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(getApplicationContext(), "로그인 해 주세요.", Toast.LENGTH_SHORT).show();
+//                    Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
+//                    startActivity(intent2);
+//                }
             }
         });
     }

@@ -150,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_booking:
                         item.setChecked(true);
                         // displayMessage("slideshow");
+                        Intent intent5 = new Intent(getApplicationContext(), BookingActivity.class);
+                        startActivity(intent5);
                         return true;
 
                     case R.id.nav_setting:

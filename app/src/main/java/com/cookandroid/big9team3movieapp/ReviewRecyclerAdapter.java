@@ -6,13 +6,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,15 +20,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAdapter.ViewHolder> {
     Context context;
@@ -40,6 +44,8 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mReference = mDatabase.getReference();
     private FirebaseAuth mFirebaseAuth;
+    int pos;
+    List<String> keyList;
     ReviewItem reviewItem ;
     private SharedPreferences preferences;
     private String getTime() {
@@ -48,10 +54,11 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
         return mFormat.format(regdate);
     }
 
-    public ReviewRecyclerAdapter(Context context, ArrayList<ReviewItem> reviewItemArrayList) {
+    public ReviewRecyclerAdapter(Context context, ArrayList<ReviewItem> reviewItemArrayList, List<String> keyList) {
         this.context = context;
         this.reviewItemArrayList = reviewItemArrayList;
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        this.keyList = keyList;
 
     }
 
@@ -65,16 +72,19 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
 
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ReviewItem reviewItem = reviewItemArrayList.get(position);
+
         holder.tvwriter.setText("작성자 : " + reviewItem.getWriter());
         holder.tvcontent.setText("" + reviewItem.getContent());
         holder.tvregdate.setText("등록일 : " + reviewItem.getRegdate());
-
+        pos = position;
         //작성자 아니면 버튼 안뜨게 하기
         mFirebaseAuth = FirebaseAuth.getInstance();
         String uid = mFirebaseAuth.getUid();
         // String uid = mUser.getUid();
+        //   String str =  databaseReference.child("loginApp").child("REVIEW").;
+        // Log.d("str","str"+str);
         mReference.child("loginApp").child("UserAccount").child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -201,24 +211,28 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
 
             buttonUpdate.setOnClickListener(new View.OnClickListener() {
 
+                String key = keyList.get(pos);
+
                 @Override
                 public void onClick(View view) {
+                    String Id = tvwriter.getText().toString();
                     String Writer = tvwriter.getText().toString();
                     String Content = tvcontent.getText().toString();
                     String Regdate = getTime() + "";
 
                     if (writer.isEmpty() || content.isEmpty() || regdate.isEmpty()) {
-                        Toast.makeText(context, "Please Enter All data...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "글을 입력해 주세요.", Toast.LENGTH_SHORT).show();
                     } else {
 
                         if (Writer.equals(writer) && Content.equals(content) && Regdate.equals(regdate)) {
-                            Toast.makeText(context, "you don't change anything", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "변경 사항이 없습니다.", Toast.LENGTH_SHORT).show();
                         } else {
-                            databaseReference.child("loginApp").child("REVIEW").child(writer).setValue(new ReviewItem(Writer, Content, Regdate));
-                            Toast.makeText(context, "Review Updated successfully!", Toast.LENGTH_SHORT).show();
+                            databaseReference.child("loginApp").child("REVIEW").child(key).child("content").setValue(Content);
+                            Toast.makeText(context, "리뷰 수정이 완료되었습니다!", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                     }
+
                 }
             });
 
@@ -246,10 +260,11 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
             });
 
             buttonDelete.setOnClickListener(new View.OnClickListener() {
+                String key = keyList.get(pos);
                 @Override
                 public void onClick(View view) {
-                    databaseReference.child("loginApp").child("REVIEW").child(writer).removeValue();
-                    Toast.makeText(context, "Deleted successfully!", Toast.LENGTH_SHORT).show();
+                    databaseReference.child("loginApp").child("REVIEW").child(key).removeValue();
+                    Toast.makeText(context, "삭제 완료 되었습니다!", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     Log.d("writer","writer"+writer);
                 }

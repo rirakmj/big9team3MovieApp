@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class ReviewActivity extends AppCompatActivity {
@@ -58,6 +59,7 @@ public class ReviewActivity extends AppCompatActivity {
     Gson gson;
     String name;
     private SharedPreferences preferences;
+    private List<String> keyList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,19 +132,21 @@ public class ReviewActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 reviewItemArrayList.clear();
+                keyList.clear();
 
                 String nickname = "";
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     ReviewItem review = dataSnapshot.getValue(ReviewItem.class);
+                    String key = dataSnapshot.getKey();
                     UserAccount user = new UserAccount();
                     if(review.getWriter().equals(preferences.getString("nickname",""))){
                         review.setFlag("1");
                     }
                     reviewItemArrayList.add(review);
-
+                    keyList.add(key);
                 }
 
-                adapter = new ReviewRecyclerAdapter(ReviewActivity.this, reviewItemArrayList);
+                adapter = new ReviewRecyclerAdapter(ReviewActivity.this, reviewItemArrayList, keyList);
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
@@ -165,7 +169,6 @@ public class ReviewActivity extends AppCompatActivity {
 
             TextView textwriter = dialog.findViewById(R.id.textwriter);
             TextView textcontent = dialog.findViewById(R.id.textcontent);
-
 
             Button buttonAdd = dialog.findViewById(R.id.buttonAdd);
             Button buttonCancel = dialog.findViewById(R.id.buttonCancel);
