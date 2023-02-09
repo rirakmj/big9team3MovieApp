@@ -104,13 +104,13 @@ public class ReviewwithstarActivity extends AppCompatActivity {
                     }
                 });
 
-////        mReference.child("movie").addValueEventListener(new ValueEventListener() {
-////            @Override
-////            public void onDataChange(@NonNull DataSnapshot snapshot) {
-////                Movie movie = snapshot.getValue(Movie.class);
-////                String key = snapshot.getKey();
-////                String movietitle = snapshot.
-////            }
+//        mReference.child("movie").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                Movie movie = snapshot.getValue(Movie.class);
+//                String key = snapshot.getKey();
+//                String movietitle = snapshot.
+//            }
 //
 //            @Override
 //            public void onCancelled(@NonNull DatabaseError error) {

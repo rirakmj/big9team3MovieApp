@@ -45,6 +45,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     TextView info; //사용자 아이디
     TextView tvWelcome;
     private android.content.SharedPreferences preferences;
+    private List<String> keyList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -260,15 +262,42 @@ public class MainActivity extends AppCompatActivity {
             movieAdapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int pos) {
+                    databaseReference.child("movie").addValueEventListener(new ValueEventListener() {
+                        @SuppressLint("NotifyDataSetChanged")
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            keyList.clear();
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                String key = dataSnapshot.getKey();
+                                keyList.add(key);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                     // 선택한 아이템의 detail_link를 넘긴다.
                     String link = mList.get(pos).getDetail_link();
                     String title = mList.get(pos).getTitle();
+                    String mykey = keyList.get(pos);
                     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                     intent.putExtra("dlink", link);
                     intent.putExtra("dtitle", title);
+                    intent.putExtra("mykey", mykey);
                     startActivity(intent);
 
-                    // 아이템을 클릭하면 상세보기 대화상자가 뜸
+                }
+
+
+            });
+        }
+    }
+
+
+        // 아이템을 클릭하면 상세보기 대화상자가 뜸
 //                    View dialogview = View.inflate(MainActivity.this, R.layout.dialog_detail, null);
 //                    ImageView ivBigPoster = dialogview.findViewById(R.id.ivBigPoster);
 //                    GlideApp.with(dialogview).load(mList.get(pos).getImg_url())
@@ -294,78 +323,75 @@ public class MainActivity extends AppCompatActivity {
 //                    dlg.setView(dialogview);
 //                    dlg.setNegativeButton("닫기", null);
 //                    dlg.show();
-                }
-            });
-        }
-    }
 
-    // 영화 데이터 파이어베이스에 저장
-    public void addmovie(String title, String link, String url, String release, String director) {
-        Movie movie = new Movie(title, link, url, release, director);
-        databaseReference.child("movie").push().setValue(movie);
-    }
+
+        // 영화 데이터 파이어베이스에 저장
+        public void addmovie(String title, String link, String url, String release, String director) {
+            Movie movie = new Movie(title, link, url, release, director);
+            databaseReference.child("movie").push().setValue(movie);
+        }
 
 //    private void displayMessage(String message) {
 //        Toast.makeText(this, "message", Toast.LENGTH_SHORT).show();
 //    }
 
-    //메뉴 선택시 네비게이션 호출
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                addMenuItemInNavMenuDrawer(true);
-                drawerLayout.openDrawer(GravityCompat.START);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void addMenuItemInNavMenuDrawer(boolean flag) {
-        Menu menu = navigationView.getMenu();
-        MenuItem commeMenu = menu.findItem(R.id.common_menu);
-        Menu subMenu = commeMenu.getSubMenu();
-
-        MenuItem login = subMenu.findItem(R.id.nav_login);
-        MenuItem logout = subMenu.findItem(R.id.nav_logout);
-        MenuItem booking = subMenu.findItem(R.id.nav_booking);
-        MenuItem setting = subMenu.findItem(R.id.nav_setting);
-        MenuItem remove = subMenu.findItem(R.id.nav_delete);
-
-        if (user != null) {
-            flag = true;
-        } else {
-            flag = false;
+        //메뉴 선택시 네비게이션 호출
+        @Override
+        public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    addMenuItemInNavMenuDrawer(true);
+                    drawerLayout.openDrawer(GravityCompat.START);
+            }
+            return super.onOptionsItemSelected(item);
         }
 
-        if (flag == true) {
-            login.setVisible(false);
-            logout.setVisible(true);
-            booking.setVisible(true);
-            setting.setVisible(true);
-            remove.setVisible(true);
-        } else {
-            login.setVisible(true);
-            logout.setVisible(false);
-            booking.setVisible(false);
-            setting.setVisible(false);
-            remove.setVisible(false);
+        private void addMenuItemInNavMenuDrawer(boolean flag) {
+            Menu menu = navigationView.getMenu();
+            MenuItem commeMenu = menu.findItem(R.id.common_menu);
+            Menu subMenu = commeMenu.getSubMenu();
+
+            MenuItem login = subMenu.findItem(R.id.nav_login);
+            MenuItem logout = subMenu.findItem(R.id.nav_logout);
+            MenuItem booking = subMenu.findItem(R.id.nav_booking);
+            MenuItem setting = subMenu.findItem(R.id.nav_setting);
+            MenuItem remove = subMenu.findItem(R.id.nav_delete);
+
+            if (user != null) {
+                flag = true;
+            } else {
+                flag = false;
+            }
+
+            if (flag == true) {
+                login.setVisible(false);
+                logout.setVisible(true);
+                booking.setVisible(true);
+                setting.setVisible(true);
+                remove.setVisible(true);
+            } else {
+                login.setVisible(true);
+                logout.setVisible(false);
+                booking.setVisible(false);
+                setting.setVisible(false);
+                remove.setVisible(false);
+            }
+            navigationView.invalidate();
         }
-        navigationView.invalidate();
-    }
 
-    private void signOut() {
-        mFirebaseAuth.getInstance().signOut();
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, task -> {
-                });
-        //gsa = null;
-    }
+        private void signOut() {
+            mFirebaseAuth.getInstance().signOut();
+            mGoogleSignInClient.signOut()
+                    .addOnCompleteListener(this, task -> {
+                    });
+            //gsa = null;
+        }
 
-    private void revokeAccess() {
-        mFirebaseAuth.getCurrentUser().delete();
-    }
+        private void revokeAccess() {
+            mFirebaseAuth.getCurrentUser().delete();
+        }
 
-}
+    }
 
 
 

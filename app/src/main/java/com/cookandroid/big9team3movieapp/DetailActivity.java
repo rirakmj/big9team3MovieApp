@@ -93,6 +93,8 @@ public class DetailActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             Intent inIntent = getIntent();
             String dlink = inIntent.getStringExtra("dlink");
+            String mykey = inIntent.getStringExtra("mykey");
+            Log.d("mykey", "mykey: " +mykey);
 
             try {
                 Document doc = Jsoup.connect("https://movie.naver.com/" + dlink).get();
