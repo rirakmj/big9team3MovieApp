@@ -47,10 +47,11 @@ public class ReviewwithstarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reviewwithstar);
 
         Intent intent = getIntent();
-        String mTitle = intent.getStringExtra("mTitle");
-        String mImgurl = intent.getStringExtra("mImgurl");
-        String myscore = intent.getStringExtra("myscore");
-        String myuid = intent.getStringExtra("myuid");
+        final String mTitle = intent.getStringExtra("mTitle");
+        final String mImgurl = intent.getStringExtra("mImgurl");
+        final String myscore = intent.getStringExtra("myscore");
+        final String myuid = intent.getStringExtra("myuid");
+        // Log.d("dkey", "dkey: " +dKey);
 
         ivRSM = findViewById(R.id.ivRSM);
         tvRSM = findViewById(R.id.tvRSM);
@@ -80,35 +81,46 @@ public class ReviewwithstarActivity extends AppCompatActivity {
                 }
             });
         }
-
-        // tvWriter (hidden)에 로그인 된 유저 닉네임 불러오기
-        mReference.child("loginApp").child("UserAccount").child(myuid)
-                .addValueEventListener(new ValueEventListener() {
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        UserAccount user = snapshot.getValue(UserAccount.class);
-                        String name = user.getName();
-                        tvWriter = findViewById(R.id.tvWriter);
-                        tvWriter.setText(name);
-                        Log.d("myname", "myname: " + name);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+// 배열을 클래스 말고 그냥 .add로 해 보기
+            // tvWriter (hidden)에 로그인 된 유저 닉네임 불러오기
+//            mReference.child("loginApp").child("UserAccount").child(myuid)
+//                    .addValueEventListener(new ValueEventListener() {
+//                        @SuppressLint("NotifyDataSetChanged")
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            UserAccount user = snapshot.getValue(UserAccount.class);
+//                            String name = user.getName();
+//                            tvWriter = findViewById(R.id.tvWriter);
+//                            tvWriter.setText(name);
+//                            // Log.d("myname", "myname: " + name);
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = getIntent();
+                String dkey = intent.getStringExtra("myKey");
+                Log.d("dkey", "dkey: " +dkey);
                 String score = tvMyscore.getText().toString();
                 String shortreview = etShortreview.getText().toString();
                 String writer = tvWriter.getText().toString();
                 String title = tvRSM.getText().toString();
-                ReviewStarItem starReview = new ReviewStarItem(score, shortreview, writer, title);
-                mReference.child("starreview").push().setValue(starReview);
+                ReviewStarItem starReview = new ReviewStarItem(dkey, score, shortreview, writer, title);
+                mReference.child("loginApp").child("STARREVIEW").push().setValue(starReview);
+                // Log.d("newscore", "new: " +score +shortreview);
+                finish();
+
+                Intent outIntent = new Intent(getApplicationContext(), DetailActivity.class);
+                outIntent.putExtra("myscore2", score);
+                outIntent.putExtra("myshortreview2", shortreview);
+                outIntent.putExtra("myname", writer);
+                setResult(RESULT_OK, outIntent);
 
                 // 양방향 액티비티로 별점 넘겨주기
 

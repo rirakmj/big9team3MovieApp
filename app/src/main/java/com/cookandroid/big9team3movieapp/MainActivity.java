@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
             info = findViewById(R.id.Name);
         }
 
-
         //네비게이션 뷰에서 아이템 선택 시 해당 페이지로 이동 또는 주어진 역할 수행
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -265,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
                 movieAdapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int pos) {
-
                         // 선택한 아이템의 detail_link를 넘긴다.
                         String link = mList.get(pos).getDetail_link();
                         String title = mList.get(pos).getTitle();
@@ -275,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("dtitle", title);
                         intent.putExtra("dkey", key);
                         startActivity(intent);
+                        //Log.d("key", "Key: " +key);
 
                     }
                 });

@@ -1,16 +1,30 @@
 package com.cookandroid.big9team3movieapp;
 
 public class ReviewStarItem {
+    String dkey;
     String score;
     String shortreview;
     String writer;
     String title;
 
-    public ReviewStarItem(String score, String shortreview, String writer, String title) {
+    public ReviewStarItem() {
+
+    }
+
+    public ReviewStarItem(String dkey, String score, String shortreview, String writer, String title) {
+        this.dkey= dkey;
         this.score = score;
         this.shortreview = shortreview;
         this.writer = writer;
         this.title = title;
+    }
+
+    public String getDkey() {
+        return dkey;
+    }
+
+    public void setDkey(String dkey) {
+        this.dkey = dkey;
     }
 
     public String getScore() {

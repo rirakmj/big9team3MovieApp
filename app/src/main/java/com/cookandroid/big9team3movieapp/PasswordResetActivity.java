@@ -103,11 +103,11 @@ public class PasswordResetActivity<User> extends AppCompatActivity {
             return;
         }
 
-        if (findViewById(R.id.btn_passwordCheck).getVisibility() == View.VISIBLE) {
-            Toast.makeText(PasswordResetActivity.this, "중복확인 버튼을 눌러주세요.", Toast.LENGTH_SHORT).show();
-            return;
-
-        }
+//        if (findViewById(R.id.btn_passwordCheck).getVisibility() == View.VISIBLE) {
+//            Toast.makeText(PasswordResetActivity.this, "중복확인 버튼을 눌러주세요.", Toast.LENGTH_SHORT).show();
+//            return;
+//
+//        }
 
         if (newPassword.length() == 0) {
             Toast.makeText(PasswordResetActivity.this, "새로운 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();

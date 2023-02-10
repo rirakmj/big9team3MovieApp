@@ -1,6 +1,7 @@
 package com.cookandroid.big9team3movieapp;
 
 public class MovieDetail {
+    public String d_key;
     public String d_title;
     public String d_img_url;
     public String d_release;
@@ -15,9 +16,10 @@ public class MovieDetail {
     public String d_actor;
     public String d_booking;
 
-    public MovieDetail(String title, String url, String release, String genre, String runtime,
+    public MovieDetail(String dkey, String title, String url, String release, String genre, String runtime,
                        String grade, Float starscorerb, Float starscore,
                        String audiencecnt, String synopsis, String director, String actor, String booking) {
+        this.d_key = dkey;
         this.d_title = title;
         this.d_img_url = url;
         this.d_release = release;
@@ -31,6 +33,14 @@ public class MovieDetail {
         this.d_director = director;
         this.d_actor = actor;
         this.d_booking = booking;
+    }
+
+    public String getD_key() {
+        return d_key;
+    }
+
+    public void setD_key(String d_key) {
+        this.d_key = d_key;
     }
 
     public String getD_title() {
